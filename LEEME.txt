@@ -51,11 +51,8 @@ CANCIONES PRECARGADAS (Spotify; entre paréntesis el respaldo en YouTube)
   2B Ed Sheeran - Thinking Out Loud            5As8xJv2pK4GES8c5kgtsK  (lp-EO5I60KA)
   3A Miguel Bosé - Don Diablo                  11olvsaUPHD6owYgWCPOGX  (lce_iJlk0Ig)
   3B Dua Lipa - Levitating                     41z2bSbbtJ9wiIee4RXdi5  (WHuBW3qKm9g)
-  4A Loca con su tíguere (R. Arias)            SIN fuente oficial: subida de aficionado en YouTube
-                                               umTzxNu0uMY (VERIFICAR de oído) o cargue archivo local
-  4B Shakira - Loca ft. El Cata                42k1KeBehAd83lrGt1okiC  (XAhTt60W7qo)
-  5A Shabba Ranks - Dem Bow                    1BUBidO12VUKo44PaQvpt9  (HkzEZ_pFORs)
-  5B Karol G - Provenza                        7dSZ6zGTQx66c2GF91xCrb  (ca48oMV59LU)
+  4A Shabba Ranks - Dem Bow                    1BUBidO12VUKo44PaQvpt9  (HkzEZ_pFORs)
+  4B Karol G - Provenza                        7dSZ6zGTQx66c2GF91xCrb  (ca48oMV59LU)
 Todos los IDs de Spotify fueron validados con el oEmbed de Spotify (título correcto).
 Cada botón "Enlace" permite cambiar cualquier canción.
 

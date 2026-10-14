@@ -17,12 +17,12 @@ Música, sampling y derecho de autor en Colombia · 3 h con pausa de 10 min
 ### Una semana antes
 - [ ] Cambiar `TEACHER_KEY` en Render.
 - [ ] Verificar los hechos judiciales de 2026 (Pelham II, dembow, Levitating/Kante) y el estado de «Loca».
-- [ ] Par 4 A (Ramón Arias): confirmar la grabación de oído o cargar un archivo local.
+- [x] Par de «Loca» retirado del audio (sin fuente oficial): el caso se explica en la diapositiva 21, sin reproductor.
 - [ ] Marcar el inicio de cada canción: reproducir, pausar en el pasaje, «Enlace» → «Marcar inicio aquí».
 
 ### El día anterior
 - [ ] Ensayo con 2–3 celulares reales (datos móviles y Wi-Fi del salón).
-- [ ] Probar el audio de los 5 pares con «Comparar A → B» en el equipo y la red del salón.
+- [ ] Probar el audio de los 4 pares con «Comparar A → B» en el equipo y la red del salón.
 - [ ] Iniciar sesión en Spotify en el navegador del salón (sin sesión suenan 30 s).
 - [ ] Tener a mano archivos MP3 locales de respaldo.
 
@@ -34,14 +34,14 @@ Música, sampling y derecho de autor en Colombia · 3 h con pausa de 10 min
 ## Recorrido (con la plataforma)
 | Min | Bloque | Qué hace la plataforma |
 |---|---|---|
-| 0–20 | 01 · Tribunal del oído | Por cada par: «Comparar A → B» y «Abrir votación a estudiantes». Ronda 1 a ciegas (el expediente va oculto). |
+| 0–20 | 01 · Tribunal del oído | Por cada uno de los 4 pares: «Comparar A → B» y «Abrir votación a estudiantes». Ronda 1 a ciegas (el expediente va oculto). |
 | 20–50 | 02 · Cinco objetos | Mapa conceptual, encuesta de «Thinking Out Loud» (abrir a estudiantes) y microtaller idea/expresión (botones 1–6 de «Votación en vivo»). |
 | 50–85 | 03 · Derechos en tensión | Verbos patrimoniales, morales, conexos, gestión colectiva, caso relámpago del cover (encuesta en vivo). |
 | 85–130 | 04 · Casos | 7 casos: línea de tiempo, expediente, «Por qué importa» y «Cómo evitarlo», par de audio para comparar; encuesta del dembow; tabla y prevención. |
 | 130–140 | Pausa | Temporizador de 10 min. |
 | 140–165 | 05 · Canción por capas | Reglas del estudio, 6 capas, contrato, laboratorio de cláusulas (8 min), mapa probatorio, ruta institucional. |
 | 165–185 | 06 · Caso final | Hechos, 4 equipos, matriz de decisión (el juez distribuye), test de 7 preguntas. |
-| 185–200 | Cierre | Segunda votación (los 5 pares), comparación 1.ª vs 2.ª, diez reglas, frase final, fuentes. |
+| 185–200 | Cierre | Segunda votación (los 4 pares), comparación 1.ª vs 2.ª, diez reglas, frase final, fuentes. |
 
 ## Atajos en modo clase
 ← → avanzar · N notas · F pantalla completa · Esc salir · Menú → «Conectar estudiantes».
@@ -62,4 +62,4 @@ Música, sampling y derecho de autor en Colombia · 3 h con pausa de 10 min
 - «Borrar todos los votos» antes de reutilizar la sesión.
 
 ## Pendiente de usted (no puedo verificarlo desde aquí)
-1. Audio real en el salón. 2. Par 4 A. 3. Hechos judiciales de 2026. 4. Cambiar la clave.
+1. Audio real en el salón. 2. Hechos judiciales de 2026 y estado de Kante/dembow. 3. Cambiar la clave.

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>La sala de remezclas — Portal de la clase</title>
-<meta name="description" content="Portal de la clase: música, sampling y derecho de autor en Colombia. Cinco objetos jurídicos, cinco pares, siete casos y un sample de salsa en Cali.">
+<meta name="description" content="Portal de la clase: música, sampling y derecho de autor en Colombia. Cinco objetos jurídicos, cuatro pares, siete casos y un sample de salsa en Cali.">
 <style>
 @font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/Inter-300.woff2) format('woff2')}
 @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/Inter-400.woff2) format('woff2')}
@@ -227,7 +227,7 @@ body.menu-open #menu{clip-path:inset(0);pointer-events:auto}
 
 <aside class="bio chrome">
   <div class="who"><img id="avatar" alt="Jorge Alberto Villegas"><b>Jorge Alberto Villegas</b></div>
-  <p>Música, sampling y derecho de autor en Colombia. Tres horas, cinco pares de canciones y una pregunta: ¿quién tiene que pedir permiso para que una canción suene?</p>
+  <p>Música, sampling y derecho de autor en Colombia. Tres horas, cuatro pares de canciones y una pregunta: ¿quién tiene que pedir permiso para que una canción suene?</p>
 </aside>
 <div class="colophon chrome">Clase 2026</div>
 <button class="gridbtn" id="gridBtn" aria-label="Alternar vista de cuadrícula"><b></b><b></b><b></b><b></b></button>
@@ -276,14 +276,13 @@ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 /* ---------- content: 21 pieces of the class ---------- */
 const ITEMS=[
  // tribunal del oído (5 pares)
- {t:'Par 1 · Marvin Gaye / Robin Thicke',p:'Bloque 01 · El tribunal del oído',n:'«Got to Give It Up» y «Blurred Lines». El jurado condenó por el ambiente y el groove: la frontera de lo que no debería protegerse.',a:'tribunal'},
+ {t:'Par 1 · Marvin Gaye / Robin Thicke',p:'Bloque 01 · El tribunal del oído',n:'«Got to Give It Up» y «Blurred Lines». Sin sample y con acordes distintos, un jurado condenó: el límite de lo que se llegó a proteger.',a:'tribunal'},
  {t:'Par 2 · Marvin Gaye / Ed Sheeran',p:'Bloque 01 · El tribunal del oído',n:'«Let\'s Get It On» y «Thinking Out Loud». Progresión de acordes y ritmo armónico no son expresión protegible.',a:'tribunal'},
  {t:'Par 3 · Miguel Bosé / Dua Lipa',p:'Bloque 01 · El tribunal del oído',n:'«Don Diablo» y «Levitating». Una escala descendente común: «se oye parecido» no basta.',a:'tribunal'},
- {t:'Par 4 · Ramón Arias / Shakira',p:'Bloque 01 · El tribunal del oído',n:'«Loca con su tíguere» y «Loca». La cadena de autorizaciones se rompe: Shakira adaptó la versión de El Cata, no la original.',a:'tribunal'},
- {t:'Par 5 · Shabba Ranks / Karol G',p:'Bloque 01 · El tribunal del oído',n:'«Dem Bow» y «Provenza». ¿Se puede ser dueño de un ritmo? El caso Fish Market.',a:'tribunal'},
+ {t:'Par 4 · Shabba Ranks / Karol G',p:'Bloque 01 · El tribunal del oído',n:'«Dem Bow» y «Provenza». ¿Se puede ser dueño de un ritmo? El caso Fish Market.',a:'tribunal'},
  // objetos
  {t:'Obra musical',p:'Bloque 02 · Una canción = cinco objetos',n:'Melodía, armonía y estructura compuestas. Titular: el compositor. Decisión 351 arts. 3–4.',a:'objetos'},
- {t:'Letra',p:'Bloque 02 · Una canción = cinco objetos',n:'Texto literario cantable; obra en colaboración con la música. Titular: el letrista. Ley 23 art. 18.',a:'objetos'},
+ {t:'Letra',p:'Bloque 02 · Una canción = cinco objetos',n:'Texto literario cantable. Titular: el letrista; su aporte suele ser divisible de la música (Ley 23 art. 18).',a:'objetos'},
  {t:'Interpretación',p:'Bloque 02 · Una canción = cinco objetos',n:'La ejecución por cantante o músico. Derecho conexo del intérprete: Decisión 351 arts. 34–36.',a:'objetos'},
  {t:'Fonograma',p:'Bloque 02 · Una canción = cinco objetos',n:'La fijación sonora concreta: el master. Titular: el productor fonográfico. Arts. 37–38.',a:'objetos'},
  {t:'Imagen y nombre',p:'Bloque 02 · Una canción = cinco objetos',n:'Rostro, voz reconocible, nombre artístico. Derecho fundamental de la persona; marca si está registrada.',a:'objetos',tall:true},
@@ -291,7 +290,7 @@ const ITEMS=[
  {t:'Blurred Lines',p:'Bloque 04 · Williams v. Gaye · 2015–2018',n:'Cuando el jurado protege el groove. El salvamento de voto advirtió que se estaba protegiendo un género.',a:'casos'},
  {t:'Thinking Out Loud',p:'Bloque 04 · Sheeran · 2023–2025',n:'Los acordes son de todos: los elementos comunes del oficio no se monopolizan.',a:'casos'},
  {t:'Levitating',p:'Bloque 04 · Dua Lipa · 2022–2025',n:'Tres demandas, tres objetos: la misma canción puede ser demandada por la obra y por el fonograma.',a:'casos'},
- {t:'Loca',p:'Bloque 04 · Mayimba Music v. Sony · 2014',n:'La cadena de títulos se rompe en el eslabón más débil. Quien licencia una obra ajena responde aunque pague de buena fe.',a:'casos'},
+ {t:'Loca',p:'Bloque 04 · Mayimba Music v. Sony · 2014–2015',n:'Un fallo de 2014 que cayó en 2015: la fecha de la grabación presentada como prueba no resistió el examen. La autoría y la fecha se prueban.',a:'casos'},
  {t:'La Bicicleta',p:'Bloque 04 · Madrid · 2019',n:'La prueba pericial decide; y el litigio tiene costo económico aun cuando se gana.',a:'casos'},
  {t:'Pelham II',p:'Bloque 04 · TJUE · 14 de abril de 2026',n:'Dos segundos de Kraftwerk y la excepción de pastiche: en Europa el sample tiene una puerta, estrecha. En Colombia no existe.',a:'casos'},
  {t:'El dembow',p:'Bloque 04 · Steely & Clevie · 2021–2026',n:'Nadie es dueño de un género; pero sí se puede ser dueño de una grabación concreta de ese género.',a:'casos'},

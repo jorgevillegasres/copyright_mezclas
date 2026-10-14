@@ -432,19 +432,18 @@ const PAIRS=[
  {id:1,a:{t:'Got to Give It Up',ar:'Marvin Gaye · 1977',q:'Marvin Gaye Got to Give It Up official'},b:{t:'Blurred Lines',ar:'Robin Thicke, Pharrell · 2013',q:'Robin Thicke Blurred Lines official'},hint:'Escuche el bajo y los cencerros del arranque de las dos.'},
  {id:2,a:{t:"Let's Get It On",ar:'Marvin Gaye · 1973',q:"Marvin Gaye Let's Get It On official audio"},b:{t:'Thinking Out Loud',ar:'Ed Sheeran · 2014',q:'Ed Sheeran Thinking Out Loud official'},hint:'La progresión de acordes de la estrofa.'},
  {id:3,a:{t:'Don Diablo',ar:'Miguel Bosé · 1980',q:'Miguel Bosé Don Diablo'},b:{t:'Levitating',ar:'Dua Lipa · 2020',q:'Dua Lipa Levitating official'},hint:'La escala descendente de la estrofa.'},
- {id:4,a:{t:'Loca con su tíguere',ar:'Ramón Arias Vásquez · 1996',q:'Loca con su tiguere Ramon Arias Vasquez'},b:{t:'Loca',ar:'Shakira ft. El Cata · 2010',q:'Shakira Loca El Cata official'},hint:'El estribillo completo.'},
- {id:5,a:{t:'Dem Bow',ar:'Shabba Ranks · 1990',q:'Shabba Ranks Dem Bow'},b:{t:'Provenza',ar:'Karol G · 2022',q:'Karol G Provenza official'},hint:'Solo la percusión: boom-ch-boom-chick.'}
+ {id:4,a:{t:'Dem Bow',ar:'Shabba Ranks · 1990',q:'Shabba Ranks Dem Bow'},b:{t:'Provenza',ar:'Karol G · 2022',q:'Karol G Provenza official'},hint:'Solo la percusión: boom-ch-boom-chick.'}
 ];
 const SLIDES=[
 {type:'chapter',id:'tribunal',num:'01',title:'El tribunal del oído',sub:'La clase vota con el oído antes de saber nada de derecho. Esa votación vuelve al final.',notes:'Apertura. No revele resultados judiciales en este bloque.'},
 {type:'rules',kicker:'Diapositiva 2',title:'Reglas del tribunal',items:['Se escuchan 20 segundos de cada canción del par.','Se vota: copia, no copia, o se parece pero no sé.','No se discute todavía. La discusión llega en el bloque 04.','El resultado queda guardado y se compara con la segunda votación al cierre.'],
  notes:'El propósito es que la clase se comprometa con una intuición que luego tendrá que defender o abandonar. Si alguien pregunta "¿pero quién ganó?", responda que eso se decide en el bloque 04.'},
-{type:'tribunal',round:1,kicker:'Diapositiva 3',title:'Los cinco pares',lead:'Reproduzca A, luego B, y registre el conteo de manos.',
- notes:'Si el salón no tiene audio confiable, use solo los pares 1, 2 y 4, que son los más reconocibles.\n\nAdvertencia sobre el par 5: el 1 de septiembre de 2026 el juez Birotte desestimó la teoría central del caso del dembow; quedan vivas reclamaciones por sampling directo del fonograma. En el par 5 la canción B es un ejemplo cualquiera con dembow; puede cambiarla por la que prefiera en la configuración.'},
+{type:'tribunal',round:1,kicker:'Diapositiva 3',title:'Los cuatro pares',lead:'Reproduzca A, luego B, y registre el conteo de manos.',
+ notes:'Si el salón no tiene audio confiable, use solo los pares 1, 2 y 3, que son los más reconocibles.\n\nAdvertencia sobre el par 4: el 1 de septiembre de 2026 el juez Birotte desestimó la teoría de la composición en el caso del dembow; verifique en el expediente qué reclamaciones sobre las grabaciones siguen vivas. En el par 4 la canción B es un ejemplo cualquiera con dembow; puede cambiarla por la que prefiera en la configuración.'},
 {type:'results',round:1,kicker:'Diapositiva 4',title:'Primer resultado',lead:'El docente no corrige nada. Los porcentajes quedan guardados para el cierre.',notes:'Anote los porcentajes y siga. No corrija.'},
 {type:'chapter',id:'objetos',num:'02',title:'Una canción = cinco objetos jurídicos',sub:'El error más común es creer que "la canción" es una sola cosa con un solo dueño.',notes:'Bloque de 30 minutos.'},
 {type:'cards',kicker:'Diapositiva 5 · Mapa conceptual',title:'Cinco objetos, cinco titulares, cinco regímenes',cols:5,
- items:[{t:'Obra musical',d:'Melodía, armonía y estructura compuestas.',tag:'Compositor · Decisión 351 arts. 3–4'},{t:'Letra',d:'Texto literario cantable; obra en colaboración con la música.',tag:'Letrista · Ley 23 art. 18'},{t:'Interpretación',d:'La ejecución por cantante o músico.',tag:'Intérprete · Decisión 351 arts. 34–36'},{t:'Fonograma',d:'La fijación sonora concreta: el master.',tag:'Productor fonográfico · arts. 37–38'},{t:'Imagen y nombre',d:'Rostro, voz reconocible, nombre artístico.',tag:'La persona · derecho fundamental'}],
+ items:[{t:'Obra musical',d:'Melodía, armonía y estructura compuestas.',tag:'Compositor · Decisión 351 arts. 3–4'},{t:'Letra',d:'Texto literario cantable. Se combina con la música, pero su aporte suele ser divisible: la colaboración del art. 18 exige indivisibilidad.',tag:'Letrista · Ley 23 art. 18'},{t:'Interpretación',d:'La ejecución por cantante o músico.',tag:'Intérprete · Decisión 351 arts. 34–36'},{t:'Fonograma',d:'La fijación sonora concreta: el master.',tag:'Productor fonográfico · arts. 37–38'},{t:'Imagen y nombre',d:'Rostro, voz reconocible, nombre artístico.',tag:'La persona · derecho fundamental'}],
  key:'Una autorización sobre uno de estos objetos no cubre automáticamente los demás.',
  notes:'La distinción obra / fonograma es la que más cuesta. Use el ejemplo de los covers: un cover nuevo necesita licencia del compositor, pero no del productor del fonograma original, porque no usa esa grabación. Un sample sí usa la grabación: necesita las dos licencias.'},
 {type:'poll',kicker:'Diapositiva 6 · Ejercicio relámpago',title:'"Thinking Out Loud" suena en un bar de Cali',lead:'¿A cuántos titulares distintos hay que pagar?',timer:300,options:['Uno','Dos','Tres o más','Ninguno, el bar ya pagó internet'],answer:2,
@@ -478,7 +477,7 @@ const SLIDES=[
  notes:'Content ID redirige ingresos, no otorga licencia de transformación. En EE. UU. existe licencia obligatoria de cover (sección 115); en Colombia no, el cover requiere autorización del titular.'},
 {type:'chapter',id:'casos',num:'04',title:'Los casos que cambiaron la conversación',sub:'Un péndulo: el jurado protege el "ambiente", los tribunales recortan, y 2026 abre preguntas nuevas sobre el sample y el ritmo.',notes:'Bloque de 45 minutos. Cada caso cierra con la misma pregunta: ¿y en Colombia?'},
 {type:'case',pair:1,kicker:'Diapositiva 17 · Caso 1 · Williams v. Gaye (2015–2018)',title:'Blurred Lines: cuando el jurado protege el groove',
- items:[['2013','Blurred Lines sale al mercado; no samplea ni copia melodía de Got to Give It Up.'],['2015','Jurado de Los Ángeles condena a Thicke y Pharrell.'],['2018','El Noveno Circuito confirma; un salvamento de voto advierte que se está protegiendo un género.']],
+ items:[['2013','Blurred Lines sale al mercado; no samplea la grabación de Got to Give It Up.'],['2015','Jurado de Los Ángeles condena a Thicke y Pharrell.'],['2018','El Noveno Circuito confirma (2–1); el voto disidente advierte que se está protegiendo un estilo.']],
  key:'Lección: un veredicto de jurado puede proteger de más. Lo que dijo la disidencia es lo que luego adoptaron otros tribunales.',src:'Williams v. Gaye, 895 F.3d 1106 (9th Cir. 2018).',
  notes:'No enseñe Blurred Lines como "la regla". Es el caso que todos los tribunales posteriores han tratado de no repetir. Traducción a Colombia: un perito tendría que identificar expresión concreta copiada, no "sensación".'},
 {type:'case',pair:2,kicker:'Diapositiva 18 · Caso 2 · Sheeran (2023–2025)',title:'Thinking Out Loud: los acordes son de todos',
@@ -486,31 +485,31 @@ const SLIDES=[
  key:'Lección: los elementos comunes del oficio no se monopolizan.',src:'Structured Asset Sales v. Sheeran (2d Cir. 2024); cert. denied (2025).',
  notes:'Ponga el par 2 y pida a la clase que tararee la progresión: casi todos pueden, porque es un lugar común del pop.'},
 {type:'case',pair:3,kicker:'Diapositiva 19 · Caso 3 · Dua Lipa (2022–2025)',title:'Levitating: tres demandas, tres objetos',
- items:[['2023','Artikal Sound System: desestimada, sin prueba de acceso a la canción.'],['mar 2025','Brown y Linzer (Don Diablo): desestimada, escala descendente genérica, citando a Sheeran.'],['Pendiente','Bosko Kante: una grabación de talkbox usada en remixes. Esa sí es sobre el fonograma.']],
+ items:[['2023','Artikal Sound System: desestimada por falta de prueba de acceso; los demandantes desistieron.'],['mar 2025','Brown y Linzer (Wiggle and Giggle All Night y Don Diablo): la jueza Failla desestima; la escala descendente no es protegible, citando a Sheeran. Anunciaron apelación.'],['Pendiente','Bosko Kante (demanda de julio de 2023, no desestimada): una grabación de talkbox usada en remixes. Esa sí es sobre el fonograma. Verifique su estado.']],
  key:'Lección: la misma canción puede enfrentar demandas sobre la obra y sobre el fonograma, con reglas distintas.',src:'Larball Publishing v. Dua Lipa (S.D.N.Y. 2025).',
  notes:'Verificar la semana de la clase el estado de la demanda Kante.'},
 {type:'steps',kicker:'Diapositiva 20 · Método de traducción · 5 minutos',title:'Sheeran, pero en Colombia',cols:3,
  items:['¿Existe una obra original protegida?','¿Quién es autor y quién titular patrimonial?','¿Qué acto de explotación se realizó?','¿Quién autorizó y qué?','¿Hay una limitación aplicable?','¿Qué cambia si la copia es del fonograma y no de la obra?'],
  key:'Las mismas seis preguntas del caso Tyson. El método no cambia; cambia el objeto.',notes:'Mantenga a los estudiantes en derecho colombiano.'},
-{type:'case',pair:4,kicker:'Diapositiva 21 · Caso 4 · Shakira, Loca (2014)',title:'La cadena de títulos se rompe en el eslabón más débil',
- items:[['1996','Ramón Arias Vásquez compone "Loca con su tíguere".'],['2007','El Cata lanza su versión; se presenta como autor.'],['2010','Shakira adapta la versión de El Cata para "Sale el Sol".'],['2014','Juez federal de Nueva York: infracción; Shakira no fue demandada; Sony y las editoras sí.']],
- key:'Lección: quien licencia una obra ajena responde aunque haya pagado de buena fe a quien no era titular.',src:'Mayimba Music v. Sony (S.D.N.Y. 2014).',
- notes:'Pregunta: ¿qué debió pedir Sony antes de grabar? Registro, cadena de cesiones, declaración de autoría con garantía.'},
+{type:'timeline',dossier:'loca',kicker:'Diapositiva 21 · Caso 4 · Shakira, Loca (2014–2015)',title:'Loca: el fallo que cayó por la prueba',
+ items:[['Según el demandante','Ramón Arias Vásquez afirma haber compuesto «Loca con su tíguere»; la fecha de su grabación fue lo controvertido.'],['2007','El Cata lanza su versión y se presenta como autor.'],['2010','Shakira adapta la versión de El Cata para «Loca» (Sale el Sol).'],['Ago 2014','Juicio sin jurado en el S.D.N.Y.: el juez Hellerstein halla infracción de Sony/ATV Latin y Sony/ATV Discos; Shakira no fue demandada.'],['Dic 2014','Los demandados piden revisar el fallo por prueba nueva sobre la grabación presentada como de 1998.'],['Ago 2015','El juez desestima la demanda: la prueba de la fecha de creación no resultó fiable y habló de fraude en el juicio.']],
+ key:'Lección: la autoría y la fecha de creación se prueban. Un fallo ya dictado puede caer si la prueba de origen resulta falsa.',src:'Mayimba Music v. Sony, No. 12-cv-1094 (S.D.N.Y. 2014; desestimada en 2015).',
+ notes:'Corrección importante: el fallo de 2014 NO quedó firme. Presente el caso completo: infracción en 2014, desestimación en 2015 por la prueba de la fecha. Las fuentes consultadas (Billboard, Lexology) difieren en el día exacto de agosto de 2015: verifique la providencia. Pregunta: ¿qué evidencia fechada tendría usted de cada canción que publica?'},
 {type:'timeline',kicker:'Diapositiva 22 · Caso 5 · La Bicicleta (2019)',title:'Shakira y Carlos Vives: la prueba pericial decide',
- items:[['Demanda','El cubano Livam alega copia de "Yo te quiero tanto" (1997).'],['SGAE','Congela las regalías de la canción durante el pleito.'],['2019','Juzgado Mercantil 12 de Madrid desestima: cuatro palabras iguales, sin coincidencia melódica, armonía y tempo distintos.']],
+ items:[['Demanda','El cubano Livan Castellano alega copia de "Yo te quiero tanto" (1997) y pide ser reconocido como coautor.'],['SGAE','Habría retenido las regalías durante el pleito (dato del material de la clase: por verificar).'],['16 may 2019','Juzgado Mercantil 12 de Madrid desestima: cuatro palabras iguales (una expresión común), sin coincidencia melódica; armonía y tempo distintos.']],
  key:'Lección: el litigio tiene costo económico aun cuando se gana.',notes:'Shakira tarareó fragmentos en la audiencia. Buen momento para hablar de la prueba pericial musical en Colombia.'},
 {type:'timeline',kicker:'Diapositiva 23 · Caso 6 · Pelham II, TJUE, 14 de abril de 2026',title:'Dos segundos de Kraftwerk y la excepción de pastiche',
- items:[['1997','Pelham usa dos segundos de "Metall auf Metall" en bucle.'],['2019 · Pelham I','El sample reconocible invade el derecho del productor fonográfico.'],['2026 · Pelham II','Pastiche: evocar la obra, diferenciarse perceptiblemente, entablar un diálogo artístico reconocible.']],
+ items:[['1997','Pelham usa dos segundos de "Metall auf Metall" en bucle.'],['2019 · Pelham I','El sample reconocible invade el derecho del productor fonográfico.'],['2026 · Pelham II','Pastiche: evocar la obra, diferenciarse perceptiblemente, entablar un diálogo artístico reconocible. El TJUE responde las preguntas; el Bundesgerichtshof debe decidir el caso concreto.']],
  key:'En Europa el sample tiene ahora una puerta, estrecha y con condiciones. En Colombia no existe: es modelo de reforma, no regla aplicable.',src:'TJUE, C-590/23.',
  notes:'Tres condiciones acumulativas. Pregunte si el sample del caso final cumpliría alguna.'},
-{type:'case',pair:5,kicker:'Diapositiva 24 · Caso 7 · El dembow (2021–2026)',title:'Steely & Clevie contra el reggaetón',
- items:[['2021','Demanda contra más de 150 artistas, incluidos Karol G, J Balvin y Daddy Yankee, por casi 2.000 canciones.'],['2 jul 2026','Juez Birotte: solo un jurado puede decidir si el ritmo de Fish Market es protegible.'],['1 sep 2026','Reconsidera y desestima la teoría central: los "elementos de Fish Market" eran un collage de varias canciones.'],['Pendiente','Reclamaciones por sampling directo del fonograma.']],
+{type:'case',pair:4,kicker:'Diapositiva 24 · Caso 7 · El dembow (2021–2026)',title:'Steely & Clevie contra el reggaetón',
+ items:[['2021','Demanda contra más de 150 artistas, incluidos Karol G, J Balvin y Daddy Yankee, por casi 2.000 canciones.'],['jul 2026','Juez Birotte: solo un jurado puede decidir si el ritmo de Fish Market es protegible (las fuentes difieren entre el 1 y el 2 de julio).'],['1 sep 2026','Reconsidera y desestima la teoría central: los "elementos de Fish Market" eran un collage de varias canciones.'],['Por verificar','Qué reclamaciones sobre las grabaciones siguen vivas tras la reconsideración.']],
  key:'Lección: nadie es dueño de un género; pero sí se puede ser dueño de una grabación concreta de ese género.',src:'Steely & Clevie Productions v. Bad Bunny et al. (C.D. Cal.).',
  notes:'Ponga el par 5 y pida que separen con las manos "el ritmo" de "la grabación". Es la mejor forma de entender por qué la demanda se partió en dos.'},
 {type:'poll',kicker:'Diapositiva 25 · Jurado · 4 minutos',title:'¿El dembow es idea, expresión o fonograma?',lead:'Y después: ¿qué parte de la demanda habría prosperado en Colombia?',timer:240,
  options:['Idea: patrón rítmico libre','Expresión protegida','Fonograma: solo la grabación concreta','Las tres cosas según el acto'],answer:3,
  key:'Copiar el patrón rítmico es tomar una idea libre; samplear Pounder Dub Mix II es reproducir un fonograma y requiere licencia.',notes:'No busque respuesta binaria.'},
-{type:'matrixcases',kicker:'Diapositiva 26',title:'Tabla comparada',rows:[['Blurred Lines','Obra (groove)','Condena confirmada 2018','Jurado + similitud sustancial'],['Sheeran','Obra (acordes)','Absuelto; certiorari negado 2025','Elementos comunes no protegibles'],['Levitating','Obra, y fonograma en la pendiente','Dos desestimadas; una abierta','Acceso + originalidad'],['Loca','Obra (cadena de títulos)','Infracción declarada 2014','Licencia de obra ajena'],['La Bicicleta','Obra (letra y melodía)','Desestimada 2019','Prueba pericial'],['Pelham II','Fonograma (sample)','Criterios fijados abril 2026','Excepción de pastiche'],['Dembow','Obra (ritmo) y fonograma','Teoría central desestimada sept. 2026','Un ritmo no se monopoliza']],cols:['Caso','Objeto','Resultado','Doctrina'],
+{type:'matrixcases',kicker:'Diapositiva 26',title:'Tabla comparada',rows:[['Blurred Lines','Obra (groove)','Condena confirmada 2018','Jurado + similitud sustancial'],['Sheeran','Obra (acordes)','Absuelto; certiorari negado 2025','Elementos comunes no protegibles'],['Levitating','Obra, y fonograma en la pendiente','Dos desestimadas; una abierta','Acceso + originalidad'],['Loca','Obra (autoría y fecha de creación)','Infracción declarada en 2014; demanda desestimada en 2015','Prueba de la fecha y del origen'],['La Bicicleta','Obra (letra y melodía)','Desestimada 2019','Prueba pericial'],['Pelham II','Fonograma (sample)','Criterios fijados abril 2026','Excepción de pastiche'],['Dembow','Obra (ritmo) y fonograma','Teoría de la composición desestimada sept. 2026; reclamaciones sobre grabaciones por verificar','Un ritmo no se monopoliza']],cols:['Caso','Objeto','Resultado','Doctrina'],
  notes:'Estado de Levitating (Kante) y dembow (sampling) verificado al 14 de octubre de 2026.'},
 {type:'chapter',num:'Pausa · 10 min',title:'Pausa',sub:'Al volver: la canción por capas.',timer:600,notes:'Pausa real.'},
 {type:'chapter',id:'capas',num:'05',title:'Colombia aplicada: la canción por capas',sub:'Se construye una canción en vivo y cada capa trae una relación jurídica que hay que nombrar antes de que suene la siguiente.',notes:'Bloque de 25 minutos.'},
@@ -519,8 +518,8 @@ const SLIDES=[
  items:[{t:'Beat de una librería gratuita','o':'Fonograma (y posible obra)',l:'Leer la licencia: ¿uso comercial?, ¿atribución?, ¿sublicencia?'},{t:'Melodía improvisada por un estudiante',o:'Obra nueva',l:'Ninguna: nace el derecho de autor del estudiante.'},{t:'Sample de dos segundos de un trombón de salsa de los 70',o:'Fonograma ajeno + obra ajena',l:'Dos licencias: productor del fonograma y compositor o editora.'},{t:'Letra que cita un verso de un poeta colombiano vivo',o:'Obra literaria ajena',l:'Licencia del autor, salvo cita (art. 22) con nombre, fuente y medida justificada.'},{t:'La voz de otro estudiante',o:'Interpretación',l:'Autorización del intérprete para fijar y explotar; derechos conexos.'},{t:'Se sube a Spotify a nombre del docente',o:'Comunicación pública + distribución',l:'Contrato con distribuidora; quién figura como productor y como autores.'}],
  notes:'La capa 1 es la trampa: casi todos asumen que "gratis" significa "libre". Tenga a mano una licencia real de una librería de samples. La capa 4 permite enseñar el derecho de cita como única excepción que sirve en una canción.'},
 {type:'cards',kicker:'Diapositiva 30 · Prevención',title:'El contrato de producción musical debería resolver seis preguntas',cols:3,
- items:[{t:'Autoría',d:'¿Quién es autor de qué: letra, música, arreglo?'},{t:'Fonograma',d:'¿Quién es productor fonográfico del master?'},{t:'Cesiones y licencias',d:'¿Qué modalidades, tiempo y territorio? Sin plazo: cinco años. Sin territorio: el país.'},{t:'Regalías',d:'¿Cómo se reparten las de obra y las de master?'},{t:'Origen ajeno',d:'¿Quién responde si una capa tenía dueño?'},{t:'Derechos morales',d:'¿Qué pasa con paternidad e integridad en remixes?'}],
- src:'Ley 23 arts. 20, 183–185; Decisión 351 arts. 30–31.',notes:'Decisión 351 art. 31: las licencias se entienden limitadas a lo pactado expresamente.'},
+ items:[{t:'Autoría',d:'¿Quién es autor de qué: letra, música, arreglo?'},{t:'Fonograma',d:'¿Quién es productor fonográfico del master?'},{t:'Cesiones y licencias',d:'¿Qué modalidades, tiempo y territorio? Sin plazo: cinco años. Sin territorio: el país. Por escrito, y con inscripción en el Registro para oponerlo a terceros.'},{t:'Regalías',d:'¿Cómo se reparten las de obra y las de master?'},{t:'Origen ajeno',d:'¿Quién responde si una capa tenía dueño?'},{t:'Derechos morales',d:'¿Qué pasa con paternidad e integridad en remixes?'}],
+ src:'Ley 23 arts. 20 y 183 (mod. Ley 1955/2019 art. 181); Decisión 351 arts. 30–31.',notes:'Decisión 351 art. 31: las licencias se entienden limitadas a lo pactado expresamente.'},
 {type:'lab',kicker:'Diapositiva 31 · Trabajo en parejas',title:'Laboratorio de cláusulas · 8 minutos',lead:'Redacte una cláusula de split de regalías para la canción construida en clase que proteja a quien hizo la melodía (capa 2) y a quien puso la voz (capa 5).',timer:480,
  options:['Obra: letra y música','Master: productor','Interpretación','Sublicencias','Plazo y territorio','Remuneración'],bulletsTitle:'Checklist mínimo',bullets:['Porcentajes por obra y por master, separados','Quién figura como productor fonográfico','Autorización del intérprete y su remuneración','Garantía de que ninguna capa tiene dueño ajeno','Qué pasa con remixes y versiones','Reserva de derechos morales'],
  key:'Después: intercambie con otra pareja y encuentre la ambigüedad que podría generar litigio.',notes:'No entregue un modelo antes del ejercicio.'},
@@ -542,14 +541,14 @@ const SLIDES=[
 {type:'test',id:'test',invert:true,kicker:'Diapositiva 37 · Herramienta de decisión',title:'El test de 7 preguntas para cualquier canción',
  items:['¿Qué objeto concreto está protegido: obra, letra, interpretación o fonograma?','¿Quién lo creó y quién es titular hoy?','¿Qué elementos son originales y cuáles del oficio común?','¿Qué acto de explotación se realizó?','¿Qué contrato, licencia o split existe?','¿Hay una limitación aplicable?','¿Qué prueba y qué remedio sostienen el caso?'],
  key:'Si una respuesta falta, todavía no tiene un caso: tiene una intuición.',notes:'Resumen metodológico. Los estudiantes pueden fotografiarlo.'},
-{type:'tribunal',round:2,kicker:'Diapositiva 38',title:'Segunda votación',lead:'Los mismos cinco pares. Vuelva a escuchar y registre el conteo.',notes:'Ahora sí: compare con la primera.'},
+{type:'tribunal',round:2,kicker:'Diapositiva 38',title:'Segunda votación',lead:'Los mismos cuatro pares. Vuelva a escuchar y registre el conteo.',notes:'Ahora sí: compare con la primera.'},
 {type:'results',round:2,kicker:'Diapositiva 38',title:'Primera votación contra segunda',lead:'¿Qué cambió en el oído de la clase?',notes:'La diferencia entre las dos votaciones es la discusión de cierre.'},
-{type:'rules',kicker:'Diapositiva 39 · Cierre',title:'Diez reglas para no perderse',items:['Una canción es al menos cuatro objetos: obra, letra, interpretación y fonograma.','Parecerse no es infringir; se infringe copiando expresión concreta y original.','Acordes, tempo, género y ritmo son del oficio común, no de nadie.','Una grabación concreta sí tiene dueño, aunque el ritmo que contiene no lo tenga.','El cover necesita licencia del compositor; el sample, además, la del productor del fonograma.','"Gratis" en una librería de beats no significa "libre": la licencia es el contrato.','Quien licencia una obra ajena responde aunque haya pagado de buena fe a quien no era titular.','El intérprete sin contrato sigue teniendo derechos conexos; lo que no tiene es prueba fácil.','Fair use y pastiche no son derecho colombiano; las excepciones aquí son taxativas.','Probar la copia, probar la titularidad y probar el daño son tres batallas distintas.'],
+{type:'rules',kicker:'Diapositiva 39 · Cierre',title:'Diez reglas para no perderse',items:['Una canción es al menos cuatro objetos: obra, letra, interpretación y fonograma.','Parecerse no es infringir; se infringe copiando expresión concreta y original.','Acordes, tempo, género y ritmo son del oficio común, no de nadie.','Una grabación concreta sí tiene dueño, aunque el ritmo que contiene no lo tenga.','El cover necesita licencia del compositor; el sample, además, la del productor del fonograma.','"Gratis" en una librería de beats no significa "libre": la licencia es el contrato.','La autoría y la fecha de creación se prueban: una prueba falsa derriba hasta un fallo ya dictado.','El intérprete sin contrato sigue teniendo derechos conexos; lo que no tiene es prueba fácil.','Fair use y pastiche no son derecho colombiano; las excepciones aquí son taxativas.','Probar la copia, probar la titularidad y probar el daño son tres batallas distintas.'],
  notes:'Vuelva a la pregunta de apertura: ¿quién tiene que pedir permiso para que una canción suene? La respuesta ahora debe empezar por "depende de qué objeto".'},
 {type:'quote',lines:['La música es de todos.','La canción es de alguien.'],sub:'Pregunta final: ¿qué split sheet firmaría hoy antes de grabar con un amigo?',notes:'Cierre de 5 minutos. Pida una sola idea a tres estudiantes.'},
 {type:'sources',id:'fuentes',kicker:'Diapositiva 41',title:'Fuentes esenciales',
  left:{h:'Colombia y Comunidad Andina',items:['Decisión Andina 351 de 1993 — arts. 3–7, 11, 13–15, 21–22, 33–43, 53.','Ley 23 de 1982 — arts. 2, 12, 17–18, 30, 165–176, 183–185.','Ley 1915 de 2018 y Ley 1403 de 2010.','DNDA — Registro, Asuntos Jurisdiccionales, Centro de Conciliación y Arbitraje.','Organización Sayco Acinpro — recaudo por comunicación pública.']},
- right:{h:'Derecho comparado',items:['Williams v. Gaye, 895 F.3d 1106 (9th Cir. 2018).','Structured Asset Sales v. Sheeran (2d Cir. 2024); cert. denied 16 jun. 2025.','Larball Publishing v. Dua Lipa (S.D.N.Y. mar. 2025); demanda Kante pendiente.','Mayimba Music v. Sony, "Loca" (S.D.N.Y. 2014).','La Bicicleta, Juzgado Mercantil 12 de Madrid (2019).','Pelham II, TJUE C-590/23 (14 abr. 2026).','Steely & Clevie v. Bad Bunny et al. (C.D. Cal., jul.–sep. 2026).']},
+ right:{h:'Derecho comparado',items:['Williams v. Gaye, 895 F.3d 1106 (9th Cir. 2018).','Structured Asset Sales v. Sheeran (2d Cir. 2024); cert. denied 16 jun. 2025.','Larball Publishing v. Dua Lipa (S.D.N.Y. mar. 2025); demanda Kante pendiente.','Mayimba Music v. Sony, "Loca" (S.D.N.Y. 2014; desestimada en 2015).','La Bicicleta, Juzgado Mercantil 12 de Madrid (2019).','Pelham II, TJUE C-590/23 (14 abr. 2026).','Steely & Clevie v. Bad Bunny et al. (C.D. Cal., jul.–sep. 2026).']},
  key:'Casos extranjeros = material comparado, no precedente. Estado de Levitating y del dembow verificado al 14 de octubre de 2026.',notes:'Para docencia, entregue extractos de las decisiones, no resúmenes periodísticos.'}
 ];
 
@@ -565,35 +564,34 @@ const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')
 /* ---------- expediente de cada par (se muestra en los casos y, tras la 2.ª votación, en el tribunal) ---------- */
 const PAIR_CASE={
  1:{caso:'Williams v. Gaye · «Blurred Lines»',
-  que:'La familia de Marvin Gaye demandó a Robin Thicke y a Pharrell Williams. «Blurred Lines» (2013) no usa ninguna grabación de «Got to Give It Up» (1977): se alegó que copiaba su «sensación» —el groove, el cencerro, el bajo, los teclados y el ambiente de fiesta—.',
-  parecido:'Cencerro y percusión del arranque, línea de bajo sincopada, coros y el aire festivo de estudio.',
-  fallo:'2015: un jurado de Los Ángeles condena. 2018: el Noveno Circuito confirma, con un voto disidente que advierte que se estaba protegiendo un género.',
-  importa:'Es el límite superior de lo que un jurado llegó a proteger: se condenó por estilo, no por una melodía copiada. Después, los tribunales evitaron repetir ese razonamiento.',
-  cueA:'Escuche el cencerro y el bajo desde el segundo 0.',cueB:'Compare: ¿mismo cencerro, mismo bajo, o la misma sensación?'},
+  que:'La familia de Marvin Gaye demandó a Robin Thicke y a Pharrell Williams. «Blurred Lines» (2013) no usa la grabación de «Got to Give It Up» (1977): se alegó que copiaba elementos de la composición. Ojo: el registro de 1977 cubría la partitura depositada (ley de 1909), así que percusión, falsete y ruidos de fiesta de la grabación no podían considerarse.',
+  parecido:'Según los demandantes: la frase característica de la melodía, el gancho, la línea de bajo, los teclados y la elección de percusión. Los peritos de la defensa señalaron acordes, tempo y tonalidad distintos.',
+  fallo:'2015: un jurado de Los Ángeles condena. 2018: el Noveno Circuito confirma (2–1), con un voto disidente que advierte que se estaba protegiendo un estilo.',
+  importa:'Es el límite superior de lo que un jurado llegó a proteger: se condenó sin sample y con acordes distintos. Después, los tribunales evitaron repetir ese razonamiento.',
+  cueA:'Escuche el bajo y el cencerro desde el arranque: es el groove que se alegó.',cueB:'Compare desde el primer compás: ¿misma línea de bajo, mismo gancho o solo la misma sensación?'},
  2:{caso:'Sheeran · «Thinking Out Loud»',
-  que:'Los herederos de Ed Townsend (coautor de «Let\'s Get It On») y una sociedad que adquirió parte de esos derechos demandaron a Ed Sheeran: sostenían que «Thinking Out Loud» tomaba la progresión de acordes y el ritmo armónico.',
-  parecido:'La progresión de acordes y el ritmo con que cambian, en estrofa y estribillo.',
-  fallo:'2023: un jurado de Nueva York absuelve. En la demanda paralela de Structured Asset Sales, el Segundo Circuito confirma en 2024 que esa combinación no es protegible y la Corte Suprema niega la revisión el 16 de junio de 2025.',
+  que:'Los herederos de Ed Townsend (coautor de «Let\'s Get It On») demandaron a Ed Sheeran; en un caso paralelo, Structured Asset Sales, que adquirió parte de esos derechos, hizo lo mismo. Sostenían que «Thinking Out Loud» tomaba la progresión de acordes y el ritmo armónico.',
+  parecido:'Según el perito de los demandantes, los acordes de los primeros 24 segundos eran «virtualmente idénticos». La defensa mostró que esa progresión aparece en al menos trece canciones anteriores.',
+  fallo:'2023: un jurado de Nueva York absuelve. En el caso de Structured Asset Sales, el Segundo Circuito confirma en 2024 que esa combinación no es protegible y la Corte Suprema niega la revisión el 16 de junio de 2025.',
   importa:'Fija que los elementos comunes del oficio no se monopolizan, aunque se combinen. Aun así, defenderse costó años y dinero.',
-  cueA:'Tararee la progresión de acordes que suena en la guitarra.',cueB:'Ahora la de Sheeran: ¿es la misma idea o la misma expresión?'},
+  cueA:'Escuche los primeros 24 segundos: la progresión de acordes que se alegó.',cueB:'Los mismos 24 segundos de Sheeran: ¿es la misma idea o la misma expresión?'},
  3:{caso:'Dua Lipa · «Levitating»',
-  que:'Una misma canción, tres demandas: Artikal Sound System (sin prueba de acceso), Brown y Linzer por «Don Diablo» de Miguel Bosé (escala descendente genérica) y Bosko Kante por una grabación de talkbox (pendiente).',
-  parecido:'Una escala descendente en la estrofa: algo que cualquier músico puede producir.',
-  fallo:'Dos desestimadas (2023 y marzo de 2025, citando el precedente Sheeran). La tercera sigue abierta y trata del fonograma, no de la composición.',
+  que:'Una misma canción, tres demandas: Artikal Sound System (sin prueba de acceso), Brown y Linzer —que alegaban copia de «Wiggle and Giggle All Night» y de «Don Diablo» de Miguel Bosé— y Bosko Kante por una grabación de talkbox (pendiente).',
+  parecido:'Cinco grupos de semicorcheas descendentes sobre una escala (si menor en «Levitating», re mayor en «Don Diablo»): la «melodía firma» que, según los demandantes, abre la canción.',
+  fallo:'Dos desestimadas (2023 y marzo de 2025, esta última por la jueza Failla, citando el precedente Sheeran; los demandantes anunciaron apelación). La de Kante sigue abierta y trata del fonograma, no de la composición.',
   importa:'Obra y fonograma se litigan con reglas distintas: se puede ganar sobre la composición y aun así deber explicaciones por una grabación.',
-  cueA:'Escuche la escala descendente de la estrofa.',cueB:'Busque la línea descendente en «Levitating». ¿Basta con que «se oiga parecido»?'},
- 4:{caso:'Mayimba Music v. Sony · «Loca»',
-  que:'Ramón Arias Vásquez sostuvo que «Loca» de Shakira (con El Cata) copiaba su «Loca con su tíguere». El Cata había grabado una versión y se presentaba como autor; Shakira adaptó esa versión.',
-  parecido:'El estribillo completo: letra, melodía y fraseo.',
-  fallo:'2014: un juez federal de Nueva York encontró infracción frente a las editoras y Sony; Shakira no fue demandada personalmente. El desarrollo posterior del caso y la prueba de la grabación fueron discutidos: verifique el estado actual antes de presentarlo como firme.',
-  importa:'Quien licencia o adapta una obra responde por toda la cadena de títulos: pagar a quien dice ser autor no basta.',
-  cueA:'Escuche el estribillo completo.',cueB:'Compare el estribillo: ¿quién copió a quién, y por qué importa quién licenció?'},
- 5:{caso:'Steely & Clevie v. Bad Bunny y otros · el dembow',
+  cueA:'Escuche desde el inicio la línea descendente de «Don Diablo».',cueB:'Ahora el arranque de «Levitating»: la escala que abre la canción. ¿Basta con que «se oiga parecido»?'},
+ 4:{caso:'Steely & Clevie v. Bad Bunny y otros · el dembow',
   que:'Steely & Clevie (autores del riddim «Fish Market», 1989) demandaron a más de 150 artistas, entre ellos Karol G, J Balvin y Daddy Yankee, por casi 2.000 canciones con dembow.',
   parecido:'El patrón de percusión «boom-ch-boom-chick»: escuche solo el ritmo, no la voz.',
-  fallo:'2 de julio de 2026: el juez Birotte dice que solo un jurado puede decidirlo. 1 de septiembre de 2026: reconsidera y desestima la teoría central. Quedan vivas las reclamaciones por sampling directo del fonograma.',
-  importa:'Nadie es dueño de un género ni de un patrón rítmico; sí de una grabación concreta. La demanda se partió en idea (libre) y fonograma (con dueño).',
-  cueA:'Solo la percusión: ¿puede alguien ser dueño de este patrón?',cueB:'¿El patrón es el mismo? ¿Y la grabación? Separe «ritmo» de «master».'}
+  fallo:'Julio de 2026: el juez Birotte dice que solo un jurado puede decidirlo. 1 de septiembre de 2026: reconsidera y desestima la teoría de la composición. Verifique en el expediente qué reclamaciones sobre las grabaciones siguen vivas.',
+  importa:'Nadie es dueño de un género ni de un patrón rítmico; sí de una grabación concreta. El debate se partió en idea (libre) y fonograma (con dueño).',
+  cueA:'Solo la percusión: ¿puede alguien ser dueño de este patrón?',cueB:'¿El patrón es el mismo? ¿Y la grabación? Separe «ritmo» de «master».'},
+ loca:{caso:'Mayimba Music v. Sony · «Loca»',
+  que:'Ramón Arias Vásquez sostuvo que «Loca» de Shakira (con El Cata) copiaba su «Loca con su tíguere». El Cata había grabado su propia versión y se presentaba como autor; Shakira adaptó esa versión.',
+  parecido:'El estribillo: letra, melodía y fraseo.',
+  fallo:'2014: el juez Hellerstein halló infracción (de Sony/ATV Latin y Sony/ATV Discos). 2015: con nueva prueba sobre la grabación presentada como de 1998, desestimó la demanda y habló de fraude en el juicio.',
+  importa:'La lección cambia: la autoría y la fecha se prueban, y una prueba falsa destruye un fallo ya dictado. Quien reclama y quien explota deben poder documentar su origen.'}
 };
 PAIRS.forEach(p=>{const c=PAIR_CASE[p.id];if(c){p.a.cue=c.cueA;p.b.cue=c.cueB}});
 function dossierHTML(pid){const c=PAIR_CASE[pid];if(!c)return '';
@@ -614,9 +612,9 @@ const NUTRE={
  'Levitating: tres demandas, tres objetos':{
   why:'La misma canción recibe reclamaciones sobre la obra (la composición) y sobre el fonograma (una grabación usada en remixes). Se prueban distinto: acceso y originalidad en un caso; uso de la grabación en el otro.',
   avoid:['Inventario de cada grabación ajena usada (talkbox, loops, voces) con su licencia.','Registre obra y fonograma por separado (ISWC / ISRC).','Documente la creación independiente y, si es el caso, la ausencia de acceso a la obra reclamante.','Exija a colaboradores y remixers cesión o licencia escrita de lo que aportan.']},
- 'La cadena de títulos se rompe en el eslabón más débil':{
-  why:'Quien explota una obra responde por la cadena completa de títulos. Pagar al que aparecía como autor no libera si no era el titular.',
-  avoid:['Antes de grabar: verifique titularidad en registros (DNDA, sociedad de gestión) y busque versiones previas.','Exija al licenciante declaración de autoría con garantía e indemnidad.','Si hay varios reclamantes plausibles, licencie a todos o retenga pagos hasta aclarar.','Guarde la diligencia: correos, búsquedas y certificados de la época.']},
+ 'Loca: el fallo que cayó por la prueba':{
+  why:'Muestra que la autoría no se prueba con la palabra: la fecha y el origen de una grabación son prueba. Quien reclama debe acreditar creación y fecha; quien explota una obra debe poder acreditar su propia cadena.',
+  avoid:['Fije la fecha de cada creación con evidencia fechada: archivos de proyecto, depósito o registro (DNDA), correos.','Conserve el original y los metadatos del archivo; no «reconstruya» pruebas después.','Antes de licenciar o adaptar una obra con historia dudosa, verifique autoría y cadena de títulos (registros, sociedad de gestión, versiones previas).','Contratos con garantía de autoría e indemnidad; retenga pagos si hay reclamantes en disputa.']},
  'Shakira y Carlos Vives: la prueba pericial decide':{
   why:'Ganar no sale gratis: regalías retenidas, honorarios y tiempo. Y todo se decide con peritaje musical.',
   avoid:['Un peritaje temprano separa el parecido accidental (cuatro palabras comunes) de la copia de expresión.','Prevea en los contratos qué ocurre con regalías en disputa.','Documente la creación independiente de letra y melodía.','Tenga perito y evidencia ordenada antes de que llegue la demanda.']},
@@ -647,16 +645,14 @@ const N=SLIDES.length;
 const store={get(k,d){try{const v=localStorage.getItem('remix:'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('remix:'+k,JSON.stringify(v))}catch(e){}}};
 const SP=id=>'https://open.spotify.com/track/'+id,YT=id=>'https://www.youtube.com/watch?v='+id;
 const DEFAULT_MEDIA={
- '1a':{src:SP('1QxE16oMgi19TWvy1YrK7B'),yt:YT('qhFNY9zW2F4'),start:0},
- '1b':{src:SP('0XzkemXSiXJa7VgDFPfU4S'),yt:YT('yyDUC1LUXSU'),start:0},
- '2a':{src:SP('39l1UORIhuHvUWfxG53tRZ'),yt:YT('tQj1kPmQXwE'),start:0},
- '2b':{src:SP('5As8xJv2pK4GES8c5kgtsK'),yt:YT('lp-EO5I60KA'),start:0},
- '3a':{src:SP('11olvsaUPHD6owYgWCPOGX'),yt:YT('lce_iJlk0Ig'),start:0},
- '3b':{src:SP('41z2bSbbtJ9wiIee4RXdi5'),yt:YT('WHuBW3qKm9g'),start:0},
- '4a':{src:YT('umTzxNu0uMY'),start:0},
- '4b':{src:SP('42k1KeBehAd83lrGt1okiC'),yt:YT('XAhTt60W7qo'),start:0},
- '5a':{src:SP('1BUBidO12VUKo44PaQvpt9'),yt:YT('HkzEZ_pFORs'),start:0},
- '5b':{src:SP('7dSZ6zGTQx66c2GF91xCrb'),yt:YT('ca48oMV59LU'),start:0}
+ '1a':{src:SP('1QxE16oMgi19TWvy1YrK7B'),yt:YT('qhFNY9zW2F4'),start:0,dur:20},
+ '1b':{src:SP('0XzkemXSiXJa7VgDFPfU4S'),yt:YT('yyDUC1LUXSU'),start:0,dur:20},
+ '2a':{src:SP('39l1UORIhuHvUWfxG53tRZ'),yt:YT('tQj1kPmQXwE'),start:0,dur:24},
+ '2b':{src:SP('5As8xJv2pK4GES8c5kgtsK'),yt:YT('lp-EO5I60KA'),start:0,dur:24},
+ '3a':{src:SP('11olvsaUPHD6owYgWCPOGX'),yt:YT('lce_iJlk0Ig'),start:0,dur:20},
+ '3b':{src:SP('41z2bSbbtJ9wiIee4RXdi5'),yt:YT('WHuBW3qKm9g'),start:0,dur:20},
+ '4a':{src:SP('1BUBidO12VUKo44PaQvpt9'),yt:YT('HkzEZ_pFORs'),start:0,dur:20},
+ '4b':{src:SP('7dSZ6zGTQx66c2GF91xCrb'),yt:YT('ca48oMV59LU'),start:0,dur:20}
 };
 let media=Object.assign({},DEFAULT_MEDIA,store.get('media',{}));const localAudio={};  // key "1a" -> {src, start}
 let votes=store.get('votes',{});  // key "r1p1" -> [copia,no,duda]
@@ -693,14 +689,14 @@ function trackHTML(key,tr,letter){const m=media[key]||{};return `<div class="tra
   <div class="ctl"><button class="pill" data-play="${key}">Reproducir ${letter}</button><button class="pill ghost" data-stop="${key}">Pausar</button><button class="pill ghost" data-cfg="${key}">Enlace</button></div>
   <div class="cfg"><div class="row"><input type="url" placeholder="Pegar enlace de YouTube o Spotify" value="${esc(m.src||'')}" data-src="${key}"><input type="number" min="0" placeholder="Inicio (s)" value="${m.start||''}" data-start="${key}"></div><div class="row"><input type="number" min="1" placeholder="Duración (s); vacío = completa" value="${m.dur||''}" data-dur="${key}"><button class="pill ghost" data-mark="${key}">Marcar inicio aquí</button></div><div class="row" style="align-items:center"><button class="pill" data-save="${key}">Guardar</button><label class="pill ghost" style="cursor:pointer">Archivo local<input type="file" accept="audio/*" data-file="${key}" hidden></label></div></div>
 </div>`}
-function abHTML(pair){return `<div class="ab">${trackHTML(pair.id+'a',pair.a,'A')}${trackHTML(pair.id+'b',pair.b,'B')}</div><p class="hintline">Qué escuchar: ${esc(pair.hint)}</p><div class="tools"><button class="pill ghost" data-compare>Comparar A → B · 20 s cada una</button></div>`}
+function abHTML(pair){return `<div class="ab">${trackHTML(pair.id+'a',pair.a,'A')}${trackHTML(pair.id+'b',pair.b,'B')}</div><p class="hintline">Qué escuchar: ${esc(pair.hint)}</p><div class="tools"><button class="pill ghost" data-compare>Comparar A → B (solo el fragmento)</button></div>`}
 
 /* ---------- render ---------- */
 function head(s){return `${s.kicker?`<p class="kick">${s.kicker}</p>`:''}<h2 class="ft">${s.title}</h2>${s.lead?`<p class="lead">${s.lead}</p>`:''}`}
 function foot(s,i){return `${s.key?`<p class="key">${s.key}</p>`:''}${s.timer?`<div class="tools"><button class="pill ghost tm" data-timer="${s.timer}">Iniciar ${fmt(s.timer)}</button></div>`:''}<div class="foot"><span>${s.src||''}</span><span class="n">${i+1} / ${N}</span></div>`}
 function nutre(s){if(!s.why&&!s.avoid)return '';
   return `<div class="nutre"><div><h4>Por qué importa</h4><p>${s.why||''}</p></div><div><h4>Cómo evitarlo</h4><ul>${(s.avoid||[]).map(a=>`<li>${a}</li>`).join('')}</ul></div></div>`}
-function body(s){return bodyBase(s)+nutre(s)}
+function body(s){return (s.dossier?`<div class="dossier" style="margin-bottom:26px">${dossierHTML(s.dossier).replace('<div class="dossier">','')}`:'')+bodyBase(s)+nutre(s)}
 function bodyBase(s){
   switch(s.type){
   case 'cards':return `<div class="grid g${s.cols}">${s.items.map(it=>`<div>${it.k?`<span class="sym">${it.k}</span>`:''}<h3>${it.t}</h3><p>${it.d}</p>${it.tag?`<span class="tag">${it.tag}</span>`:''}</div>`).join('')}</div>`;
