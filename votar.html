@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Votar — La sala de remezclas</title>
+<style>
+@font-face{font-family:'Playfair Display';font-weight:400;font-display:swap;src:url(fonts/PlayfairDisplay-400.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-weight:300;font-display:swap;src:url(fonts/Inter-300.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-weight:400;font-display:swap;src:url(fonts/Inter-400.woff2) format('woff2')}
+:root{--ink:#f4f2ef;--dim:#8c8783;--line:rgba(244,242,239,.28)}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:var(--ink);font-family:'Inter',-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;min-height:100dvh}
+body{display:flex;flex-direction:column;padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom))}
+header{display:flex;justify-content:space-between;align-items:baseline;font-family:'Playfair Display',serif;font-size:20px}
+header small{font:12px 'Inter';color:var(--dim);letter-spacing:.04em}
+main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;max-width:560px;width:100%;margin:0 auto}
+.kick{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(26px,7vw,40px);line-height:1.1;letter-spacing:-.01em;margin:0}
+.sub{color:rgba(244,242,239,.7);font-size:15px;line-height:1.5;margin:0}
+.opts{display:grid;gap:10px}
+.opts button{font:inherit;font-size:18px;color:var(--ink);text-align:left;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:transparent;min-height:60px;display:flex;justify-content:space-between;align-items:center;gap:12px;-webkit-tap-highlight-color:transparent}
+.opts button:active{background:rgba(244,242,239,.1)}
+.opts button.on{background:var(--ink);color:#000;border-color:var(--ink)}
+.opts button.on::after{content:"✓";font-size:20px}
+.opts button:disabled{opacity:.45}
+.msg{font-size:14px;color:var(--dim);min-height:1.4em}
+.wait{font-family:'Playfair Display',serif;font-size:clamp(24px,6vw,34px);line-height:1.2;color:rgba(244,242,239,.8)}
+</style>
+</head>
+<body>
+<header><span>Sala de Remezclas</span><small id="st">conectando…</small></header>
+<main id="m"><p class="wait">Esperando que el docente abra una votación…</p></main>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+let cid;try{cid=localStorage.getItem('remix:cid');if(!cid){cid=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now().toString(36));localStorage.setItem('remix:cid',cid)}}catch(e){cid=Math.random().toString(36).slice(2)+Date.now().toString(36)}
+let shownKey=null,shownOpen=null,mine=null;
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function render(a,open){
+  const m=$('#m');
+  if(!a){m.innerHTML='<p class="wait">Esperando que el docente abra una votación…</p>';return}
+  m.innerHTML=`<div><div class="kick">${open?'Votación abierta':'Votación cerrada'}</div><h1>${esc(a.title)}</h1></div>${a.subtitle?`<p class="sub">${esc(a.subtitle)}</p>`:''}
+  <div class="opts">${a.options.map((o,i)=>`<button data-o="${i}" ${open?'':'disabled'} class="${mine===i?'on':''}">${esc(o)}</button>`).join('')}</div>
+  <p class="msg" id="msg">${mine!==null?'Voto registrado. Puede cambiarlo mientras esté abierta.':(open?'Toque una opción.':'El docente cerró esta votación.')}</p>`;
+}
+async function vote(i){
+  const a=window.__a;if(!a)return;
+  try{const r=await fetch('/api/votar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client:cid,key:a.key,option:i})});
+    if(r.ok){mine=i;render(a,true)}else{$('#msg').textContent='La votación ya no está abierta.'}}
+  catch(e){$('#msg').textContent='Sin conexión; intente de nuevo.'}
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-o]');if(b&&!b.disabled)vote(+b.dataset.o)});
+async function tick(){
+  try{
+    const r=await fetch('/api/estado',{headers:{'X-Client':cid},cache:'no-store'});const s=await r.json();
+    $('#st').textContent='conectado';
+    const a=s.active;window.__a=a;
+    const key=a?a.key:null;
+    if(key!==shownKey||s.open!==shownOpen){shownKey=key;shownOpen=s.open;mine=s.mine;render(a,s.open)}
+    else if(s.mine!==null&&s.mine!==mine){mine=s.mine;render(a,s.open)}
+  }catch(e){$('#st').textContent='sin conexión'}
+}
+tick();setInterval(tick,1500);
+})();
+</script>
+</body>
+</html>

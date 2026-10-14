@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: sala-de-remezclas
+    runtime: python
+    plan: free
+    buildCommand: echo "sin dependencias"
+    startCommand: python servidor.py
+    healthCheckPath: /votar.html
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: TEACHER_KEY
+        generateValue: true

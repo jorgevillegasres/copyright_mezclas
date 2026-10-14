@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La sala de remezclas — Clase</title>
+
+<style>
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/PlayfairDisplay-400.woff2) format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/PlayfairDisplay-500.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/Inter-300.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/Inter-400.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/Inter-500.woff2) format('woff2')}
+:root{
+  --font-heading:'Playfair Display','Times New Roman',serif;
+  --font-body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  --bg:#000;--fg:#fff;--mute:rgba(255,255,255,.55);--line:rgba(255,255,255,.18);--card:rgba(255,255,255,.04);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:#000}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:#000;color:#fff;font-family:var(--font-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.inv :focus-visible{outline-color:#000}
+
+/* ===== background (hero) ===== */
+#bg{position:fixed;inset:0;z-index:0;width:100%;height:100%;display:block;transition:opacity .5s}
+#bgShade{position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,0) 75%),linear-gradient(0deg,rgba(0,0,0,.6),rgba(0,0,0,0) 40%)}
+@media(max-width:767px){#bgShade{background:linear-gradient(0deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.75) 45%,rgba(0,0,0,.15) 80%)}}
+body.scrolled #bg,body.scrolled #bgShade{opacity:0}
+
+/* ===== nav ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:16px 20px;padding-top:calc(16px + env(safe-area-inset-top,0px));mix-blend-mode:difference}
+@media(min-width:640px){.nav{padding:20px 32px;padding-top:calc(20px + env(safe-area-inset-top,0px))}}
+.logo{display:flex;gap:12px;align-items:center}
+.logo span:first-child{font-family:var(--font-heading);font-weight:500;font-size:21px;letter-spacing:-.025em}
+.logo span:last-child{font-size:25px;user-select:none;letter-spacing:-.02em}
+@media(min-width:640px){.logo span:first-child{font-size:26px}.logo span:last-child{font-size:30px}}
+.links{display:none;font-size:23px}
+.links a{transition:opacity .2s}.links a:hover{opacity:.6}
+.cta{display:none;font-size:23px;text-decoration:underline;text-underline-offset:3px;transition:opacity .2s}
+.cta:hover{opacity:.6}
+.burger{display:flex;flex-direction:column;gap:5px;padding:6px}
+.burger i{display:block;width:24px;height:2px;background:#fff;transition:all .3s}
+.burger.on i:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.on i:nth-child(2){opacity:0}
+.burger.on i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(min-width:900px){.links{display:flex}.cta{display:block}.burger{display:none}}
+.overlay{position:fixed;inset:0;z-index:9;background:rgba(0,0,0,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;flex-direction:column;justify-content:center;padding:0 32px;gap:32px;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.on{opacity:1;pointer-events:auto}
+.overlay a,.overlay button{font-size:32px;font-weight:500;text-align:left}
+.overlay .u{text-decoration:underline;text-underline-offset:4px}
+@media(min-width:900px){.overlay{display:none}}
+
+/* ===== hero ===== */
+.hero{position:relative;z-index:1;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 48px;overflow:hidden}
+@media(min-width:640px){.hero{padding:0 32px 48px}}
+@media(min-width:768px){.hero{justify-content:center;padding:0 40px}}
+.hero-in{max-width:36rem;position:relative;z-index:10}
+.blur{pointer-events:none;user-select:none;margin-bottom:20px;font-size:clamp(18px,4vw,26px);line-height:1.3;filter:blur(4px)}
+.type{margin:0 0 20px;font-size:clamp(18px,4vw,26px);line-height:1.35;min-height:2.7em}
+@media(min-width:640px){.blur,.type{margin-bottom:24px}}
+.caret{display:inline-block;width:2px;height:1.1em;background:#fff;vertical-align:middle;margin-left:2px;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.pills{display:flex;flex-wrap:wrap;row-gap:4px;opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease}
+.pills.on{opacity:1;transform:none}
+.pill{display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#000;border:1px solid rgba(0,0,0,.1);border-radius:999px;font-size:13px;padding:.3em 16px;margin:0 .2em .4em;white-space:nowrap;transition:background-color .2s,color .2s}
+@media(min-width:640px){.pill{font-size:15px;padding:.3em 20px}}
+.pill:hover{background:#000;color:#fff}
+.pill.ghost{background:transparent;color:#fff;border-color:#fff;gap:8px}
+.pill.ghost:hover{background:#fff;color:#000}
+@media(min-width:640px){.pill.ghost{gap:12px}}
+.pill.ghost u{text-underline-offset:2px}
+.drag-hint{position:absolute;right:20px;bottom:18px;z-index:10;font-size:13px;color:var(--mute);display:flex;gap:14px;align-items:center}
+@media(min-width:640px){.drag-hint{right:32px}}
+.drag-hint button{color:var(--mute);transition:color .2s}
+.drag-hint button[aria-pressed=true]{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.drag-hint .tip{display:none}
+@media(min-width:768px){.drag-hint .tip{display:inline}}
+
+/* ===== frames ===== */
+main{position:relative;z-index:2;background:#000}
+.frame{position:relative;min-height:100vh;min-height:100svh;padding:112px 20px 72px;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+@media(min-width:640px){.frame{padding:120px 32px 80px}}
+@media(min-width:768px){.frame{padding:128px 40px 88px}}
+.frame.inv{background:#fff;color:#000;--mute:rgba(0,0,0,.55);--line:rgba(0,0,0,.15);--card:rgba(0,0,0,.035)}
+.frame .wrap{width:100%;max-width:1240px;flex:1;display:flex;flex-direction:column}
+.kick{font-size:15px;color:var(--mute);margin:0 0 14px}
+.ft{font-family:var(--font-heading);font-weight:500;font-size:clamp(30px,4.4vw,60px);line-height:1.02;letter-spacing:-.03em;margin:0;max-width:22ch;text-wrap:balance}
+.lead{font-size:clamp(17px,1.6vw,21px);line-height:1.4;max-width:60ch;margin:22px 0 0;color:var(--fg)}
+.frame.inv .lead{color:#000}
+.body{margin-top:40px;flex:1}
+.key{margin-top:36px;font-size:clamp(17px,1.5vw,20px);line-height:1.4;max-width:62ch;padding-left:18px;border-left:2px solid currentColor}
+.foot{display:flex;justify-content:space-between;gap:24px;margin-top:40px;font-size:13px;color:var(--mute);line-height:1.4}
+.foot .n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.grid>div{background:#000;padding:24px 22px 26px;display:flex;flex-direction:column;gap:10px;min-height:170px}
+.frame.inv .grid>div{background:#fff}
+.g1{grid-template-columns:1fr}
+@media(min-width:700px){.g2,.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1100px){.g4{grid-template-columns:repeat(4,1fr)}}
+.grid .sym{font-size:26px;line-height:1}
+.grid h3{font-family:var(--font-heading);font-weight:500;font-size:clamp(20px,1.8vw,26px);letter-spacing:-.02em;margin:0;line-height:1.1}
+.grid p{margin:0;font-size:16px;line-height:1.45;color:var(--mute)}
+.frame.inv .grid p{color:rgba(0,0,0,.7)}
+.grid .tag{margin-top:auto;padding-top:10px;font-size:14px}
+.withimg{display:grid;gap:28px}
+@media(min-width:900px){.withimg{grid-template-columns:1.1fr 1fr;align-items:start}}
+.withimg figure{margin:0}
+.withimg img{width:100%;display:block;aspect-ratio:16/10;object-fit:cover;filter:grayscale(.2) contrast(1.05)}
+.withimg figcaption{font-size:14px;color:var(--mute);margin-top:10px}
+
+/* versus */
+.vs{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+@media(min-width:760px){.vs{grid-template-columns:1fr 1fr}.vs.mid{grid-template-columns:1fr auto 1fr}}
+.vs>div{background:var(--bg);padding:30px 26px;display:flex;flex-direction:column;gap:12px}
+.frame.inv .vs>div{background:#fff}
+.vs h3{font-family:var(--font-heading);font-weight:500;font-size:clamp(24px,2.4vw,34px);letter-spacing:-.025em;margin:0;line-height:1.05}
+.vs p{margin:0;font-size:18px;line-height:1.45}
+.vs .tag{font-size:14px;color:var(--mute);margin-top:auto;padding-top:14px}
+.vs .vsmark{display:flex;align-items:center;justify-content:center;font-size:18px;padding:14px 22px}
+.blist{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:10px;max-width:70ch}
+.blist li{font-size:18px;line-height:1.4;padding-left:22px;position:relative}
+.blist li::before{content:'✳︎';position:absolute;left:0;font-size:13px;top:.25em}
+
+/* classify */
+.cls{display:grid;gap:10px}
+@media(min-width:760px){.cls{grid-template-columns:1fr 1fr}}
+.cls button{text-align:left;border:1px solid var(--line);border-radius:18px;padding:18px 20px;font-size:18px;line-height:1.35;display:flex;justify-content:space-between;gap:16px;align-items:flex-start;transition:background-color .2s,color .2s}
+.cls button span:last-child{flex:none;font-size:13px;border:1px solid currentColor;border-radius:999px;padding:.2em .8em;opacity:0;transition:opacity .25s}
+.cls button.on{background:#fff;color:#000}
+.cls button.on span:last-child{opacity:1}
+
+/* poll */
+.poll{display:flex;flex-wrap:wrap;gap:6px}
+.poll .pill{font-size:17px;padding:.45em 26px}
+.poll .pill.pick{background:#000;color:#fff;border-color:#fff}
+.poll .pill.right{outline:2px solid #fff;outline-offset:3px}
+.reveal{margin-top:26px;font-size:clamp(20px,2vw,26px);line-height:1.3;max-width:40ch;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s}
+.reveal.on{opacity:1;transform:none}
+.tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px;align-items:center}
+.pill.tm{font-variant-numeric:tabular-nums}
+.frame.inv .pill{background:#000;color:#fff}
+.frame.inv .pill:hover{background:#fff;color:#000;border-color:#000}
+.frame.inv .pill.ghost{background:transparent;color:#000;border-color:#000}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:0}
+@media(min-width:900px){.tl{grid-auto-flow:column;grid-auto-columns:1fr}}
+.tl li{border-top:1px solid var(--line);padding:18px 18px 22px 0;position:relative}
+.tl li::before{content:'';position:absolute;top:-5px;left:0;width:9px;height:9px;border-radius:50%;background:currentColor}
+.tl b{display:block;font-family:var(--font-heading);font-weight:500;font-size:clamp(20px,2vw,28px);letter-spacing:-.02em;margin-bottom:8px}
+.tl p{margin:0;font-size:16px;line-height:1.45;color:var(--mute);max-width:32ch}
+
+/* steps */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);counter-reset:s}
+@media(min-width:760px){.steps.c3{grid-template-columns:repeat(3,1fr)}}
+.steps li{background:#000;padding:22px;counter-increment:s;font-size:19px;line-height:1.35;display:flex;gap:16px}
+.steps li::before{content:counter(s);font-size:14px;color:var(--mute);min-width:1.2em;padding-top:.2em}
+
+/* flow */
+.flow{display:grid;gap:10px}
+@media(min-width:860px){.flow{grid-template-columns:repeat(4,1fr);gap:0}}
+.flow>div{border:1px solid var(--line);border-radius:999px;padding:18px 24px;display:flex;flex-direction:column;gap:4px;position:relative}
+@media(min-width:860px){.flow>div{border-radius:0;border-right:0}.flow>div:first-child{border-radius:40px 0 0 40px}.flow>div:last-child{border-radius:0 40px 40px 0;border-right:1px solid var(--line)}}
+.flow b{font-family:var(--font-heading);font-weight:500;font-size:22px;letter-spacing:-.02em}
+.flow span{font-size:15px;color:var(--mute);line-height:1.35}
+.flow small{font-size:13px;color:var(--mute)}
+
+/* test */
+.test{list-style:none;margin:0;padding:0;counter-reset:t;max-width:900px}
+.test li{counter-increment:t;border-top:1px solid var(--line)}
+.test li:last-child{border-bottom:1px solid var(--line)}
+.test label{display:flex;gap:18px;align-items:baseline;padding:16px 0;cursor:pointer;font-size:clamp(19px,2vw,26px);letter-spacing:-.01em;line-height:1.25}
+.test label::before{content:counter(t,decimal-leading-zero);font-size:14px;color:var(--mute);min-width:2em}
+.test input{appearance:none;-webkit-appearance:none;width:22px;height:22px;border:1.5px solid currentColor;border-radius:50%;flex:none;margin:0 0 0 auto;align-self:center;display:grid;place-items:center}
+.test input:checked{background:currentColor}
+.test input:checked+span{text-decoration:line-through;text-decoration-thickness:1px;opacity:.55}
+.test label span{order:-0}
+.test-status{margin-top:22px;font-size:17px;color:var(--mute)}
+
+/* facts */
+.facts{list-style:none;margin:0;padding:0;display:grid;gap:14px;max-width:70ch;counter-reset:f}
+.facts li{font-size:clamp(18px,1.7vw,22px);line-height:1.45;padding-left:40px;position:relative;counter-increment:f}
+.facts li::before{content:counter(f);position:absolute;left:0;top:.15em;font-size:13px;width:24px;height:24px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center}
+.teams{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px}
+
+/* matrix */
+.mx{overflow-x:auto;border:1px solid var(--line)}
+.mx table{border-collapse:collapse;width:100%;min-width:600px}
+.mx th,.mx td{border-bottom:1px solid var(--line);padding:14px 16px;text-align:center;font-size:16px}
+.mx th{font-weight:500;color:var(--mute);font-size:14px}
+.mx td:first-child,.mx th:first-child{text-align:left;font-size:17px;color:inherit}
+.mx tr:last-child td{border-bottom:0}
+.dot{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);display:inline-grid;place-items:center;font-size:13px;transition:all .15s}
+.dot[data-s="1"]{background:#fff;border-color:#fff;color:#000}
+.dot[data-s="2"]{border-color:#fff;color:#fff}
+.dot[data-s="3"]{background:linear-gradient(90deg,#fff 50%,transparent 50%);border-color:#fff}
+.legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px;font-size:14px;color:var(--mute);align-items:center}
+.legend .dot{width:16px;height:16px;vertical-align:middle;margin-right:6px;pointer-events:none}
+
+/* rules */
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:0 48px;counter-reset:r}
+@media(min-width:860px){.rules{grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat(5,auto)}}
+.rules li{counter-increment:r;border-top:1px solid var(--line);padding:16px 0 18px;display:flex;gap:18px;font-size:clamp(17px,1.5vw,20px);line-height:1.4}
+.rules li::before{content:counter(r,decimal-leading-zero);font-size:14px;color:var(--mute);padding-top:.2em;min-width:1.8em}
+
+/* chapter & quote */
+.chap{justify-content:flex-end;overflow:hidden;border-top:0}
+.chap .chapbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% center;filter:grayscale(.15)}
+.chap::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.1) 70%),linear-gradient(0deg,rgba(0,0,0,.75),transparent 55%)}
+.chap .wrap{position:relative;z-index:1;justify-content:flex-end}
+.chap .num{font-size:clamp(18px,4vw,26px);filter:blur(3px);margin-bottom:18px;user-select:none}
+.chap .ft{font-size:clamp(40px,7vw,104px);max-width:14ch;line-height:.98}
+.chap .lead{color:rgba(255,255,255,.85);max-width:44ch}
+.quote .ft{font-size:clamp(34px,5.4vw,78px);max-width:20ch}
+.quote .ft span{display:block}
+.quote .ft span+span{color:rgba(255,255,255,.62)}
+
+/* sources */
+.src2{display:grid;gap:36px}
+@media(min-width:860px){.src2{grid-template-columns:1fr 1fr}}
+.src2 h3{font-weight:500;font-size:22px;margin:0 0 12px;letter-spacing:-.01em}
+.src2 ul{list-style:none;margin:0;padding:0}
+.src2 li{border-top:1px solid var(--line);padding:12px 0;font-size:16px;line-height:1.45}
+
+.frame.inv .steps li{background:#fff}
+.frame.inv .vs>div{background:#fff}
+/* class mode */
+.hud{position:fixed;left:20px;right:20px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:12;display:none;justify-content:space-between;align-items:center;gap:12px;font-size:13px;mix-blend-mode:difference;color:#fff;pointer-events:none}
+.hud>*{pointer-events:auto}
+body.cm .hud{display:flex}
+.hud .keys{color:rgba(255,255,255,.7)}
+.hud .keys button{text-decoration:underline;text-underline-offset:2px;color:#fff;margin-left:10px}
+.notes{position:fixed;left:0;right:0;bottom:0;z-index:11;max-height:42vh;overflow:auto;background:rgba(10,10,10,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;border-top:1px solid rgba(255,255,255,.2);padding:22px 24px calc(56px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .3s}
+.notes.on{transform:none}
+.notes h4{margin:0 0 10px;font-weight:500;font-size:14px;color:rgba(255,255,255,.6)}
+.notes p{margin:0 0 12px;font-size:17px;line-height:1.5;max-width:90ch}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);z-index:20;background:#fff;color:#000;border-radius:999px;padding:8px 18px;font-size:14px;opacity:0;transition:all .3s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ===== music ===== */
+.ab{display:grid;gap:18px}
+@media(min-width:900px){.ab{grid-template-columns:1fr 1fr}}
+.track{border:1px solid var(--line);padding:18px 18px 16px;display:flex;flex-direction:column;gap:12px;position:relative}
+.track.live{border-color:#fff}
+.track .lbl{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.track .lbl b{font-family:var(--font-heading);font-weight:500;font-size:clamp(20px,2vw,28px);letter-spacing:-.02em;line-height:1.05}
+.track .lbl span{font-size:14px;color:var(--mute);white-space:nowrap}
+.track .ab-letter{font-size:13px;color:var(--mute)}
+.player{aspect-ratio:16/9;background:#0a0a0a;border:1px dashed var(--line);display:grid;place-items:center;text-align:center;padding:16px;font-size:14px;color:var(--mute);line-height:1.4}
+.player iframe{width:100%;height:100%;border:0;display:block}
+.player.has{display:block;padding:0;border-style:solid}
+.player.spot{aspect-ratio:auto;height:152px}
+.track .ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.track .cfg{display:none;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.track .cfg.on{display:flex}
+.track input{background:transparent;border:1px solid var(--line);color:#fff;padding:8px 10px;font:inherit;font-size:14px;border-radius:8px;width:100%}
+.track input::placeholder{color:rgba(255,255,255,.35)}
+.track .cfg .row{display:flex;gap:8px}
+.track .cfg .row input:last-child{width:110px;flex:none}
+.hintline{margin-top:18px;font-size:15px;color:var(--mute)}
+.pairnav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;align-items:center}
+.pairnav .pill.sel{background:#000;color:#fff;border-color:#fff}
+.vote{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.vote label{display:flex;align-items:center;gap:8px;font-size:15px;border:1px solid var(--line);border-radius:999px;padding:6px 8px 6px 16px}
+.vote input{width:64px;background:transparent;border:0;border-left:1px solid var(--line);color:#fff;font:inherit;font-size:17px;padding:2px 0 2px 10px;text-align:center}
+.vote input::-webkit-outer-spin-button,.vote input::-webkit-inner-spin-button{-webkit-appearance:none}
+.vote .sum{font-size:14px;color:var(--mute);margin-left:4px}
+.res{display:grid;gap:14px}
+.res .row{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center}
+@media(max-width:700px){.res .row{grid-template-columns:1fr}}
+.res .nm{font-family:var(--font-heading);font-weight:500;font-size:20px;letter-spacing:-.02em;line-height:1.1}
+.res .nm small{display:block;font-family:var(--font-body);font-size:13px;color:var(--mute);margin-top:4px}
+.res .bars{display:grid;gap:6px}
+.res .bar{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center;font-size:13px;color:var(--mute)}
+.res .bar i{display:flex;height:22px;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+.res .bar i b{height:100%;display:grid;place-items:center;font-weight:400;font-size:12px;color:#000;overflow:hidden;white-space:nowrap}
+.res .bar i b.c{background:#fff}.res .bar i b.n{background:rgba(255,255,255,.55)}.res .bar i b.d{background:rgba(255,255,255,.25);color:#fff}
+.reslegend{display:flex;gap:18px;font-size:13px;color:var(--mute);margin-bottom:18px}
+.reslegend i{display:inline-block;width:12px;height:12px;vertical-align:middle;margin-right:6px}
+.layers{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.layers button{background:#000;text-align:left;padding:20px 22px;display:grid;grid-template-columns:36px 1fr;gap:16px;align-items:start;transition:background .2s,color .2s}
+.layers button .n{font-size:13px;color:var(--mute);padding-top:.3em}
+.layers button h3{margin:0;font-family:var(--font-heading);font-weight:500;font-size:clamp(19px,1.8vw,24px);letter-spacing:-.02em;line-height:1.1}
+.layers button .rv{display:grid;gap:4px;margin-top:8px;font-size:15px;line-height:1.4;max-height:0;overflow:hidden;opacity:0;transition:all .3s}
+.layers button.on{background:#fff;color:#000}
+.layers button.on .n{color:rgba(0,0,0,.5)}
+.layers button.on .rv{max-height:200px;opacity:1}
+.layers button .rv span:first-child{font-weight:500}
+.mxc{overflow-x:auto;border:1px solid var(--line)}
+.mxc table{border-collapse:collapse;width:100%;min-width:640px}
+.mxc th,.mxc td{border-bottom:1px solid var(--line);padding:12px 14px;text-align:left;font-size:15px;vertical-align:top;line-height:1.35}
+.mxc th{font-weight:500;color:var(--mute);font-size:13px}
+.mxc td:first-child{font-family:var(--font-heading);font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.mxc tr:last-child td{border-bottom:0}
+.playcase{margin-top:30px}
+.eq{display:flex;gap:3px;align-items:flex-end;height:18px}
+.eq i{width:3px;background:#fff;animation:eq .9s ease-in-out infinite;transform-origin:bottom}
+.eq i:nth-child(2){animation-delay:.2s}.eq i:nth-child(3){animation-delay:.4s}.eq i:nth-child(4){animation-delay:.1s}
+@keyframes eq{0%,100%{height:30%}50%{height:100%}}
+
+/* ===== tema unificado con el portal ===== */
+:root{--ink:#f4f2ef;--dim:#8c8783;--line:rgba(244,242,239,.28);--card:rgba(244,242,239,.04);--mute:rgba(244,242,239,.6);--ease:cubic-bezier(.22,.61,.36,1);--pad:clamp(14px,2.6vw,34px);--tap:44px}
+html{scrollbar-gutter:stable}
+body{font-weight:300;color:var(--ink);overscroll-behavior-y:none}
+.nav{padding:calc(var(--pad)*.8 + env(safe-area-inset-top,0px)) calc(var(--pad) + env(safe-area-inset-right,0px)) calc(var(--pad)*.35) calc(var(--pad) + env(safe-area-inset-left,0px));align-items:flex-start}
+.wordmark{font-family:var(--font-heading);font-weight:400;font-size:clamp(19px,2.1vw,27px);letter-spacing:.005em;line-height:1;color:#fff;white-space:nowrap}
+.wordmark em{font-style:normal}
+.burger{display:flex!important;flex-direction:column;align-items:flex-end;gap:5px;min-width:var(--tap);min-height:var(--tap);padding:8px 0 4px}
+.menu-label{font-size:clamp(12px,1.25vw,15px);letter-spacing:.01em;color:#fff;transition:opacity .35s}
+.burger.on .menu-label{opacity:0}
+.bars{position:relative;display:block;width:clamp(42px,4.4vw,62px);height:clamp(16px,2vw,22px)}
+.bars i{position:absolute;left:0;right:0;top:50%;height:1px;background:#fff;opacity:1;transition:transform .5s var(--ease),width .5s var(--ease)}
+.burger i{width:auto}
+.bars i:nth-child(1){transform:translateY(-5px)}
+.bars i:nth-child(2){width:clamp(34px,3.6vw,50px);left:auto;right:0;transform:translateY(5px)}
+.burger:hover .bars i:nth-child(2){transform:translateY(5px) translateX(-8px)}
+.burger.on .bars i:nth-child(1){transform:translateY(0) rotate(45deg)}
+.burger.on .bars i:nth-child(2){width:100%;left:0;transform:translateY(0) rotate(-45deg)}
+.overlay{display:grid!important;place-items:center;padding:0;gap:0;background:#050505;-webkit-backdrop-filter:none;backdrop-filter:none;opacity:1;clip-path:inset(0 0 100% 0);transition:clip-path .85s ease;pointer-events:none}
+.overlay.on{clip-path:inset(0);pointer-events:auto}
+.overlay nav{display:flex;flex-direction:column;gap:clamp(2px,.8vw,8px);text-align:center}
+.overlay a,.overlay button{font-family:var(--font-heading);font-weight:400;font-size:clamp(26px,5.4vw,56px);line-height:1.12;color:var(--ink);opacity:.55;text-align:center;text-decoration:none;transition:opacity .35s,letter-spacing .5s}
+.overlay a:hover,.overlay button:hover{opacity:1;letter-spacing:.012em}
+.overlay .u{text-decoration:none}
+.addr{position:absolute;left:var(--pad);right:var(--pad);bottom:calc(var(--pad) + env(safe-area-inset-bottom,0px));font-size:12.5px;color:var(--dim);line-height:1.7}
+.ft,.grid h3,.vs h3,.tl b,.flow b,.res .nm,.track .lbl b,.mxc td:first-child{font-weight:400}
+.pill{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.pill:hover{background:var(--ink);color:#000;border-color:var(--ink)}
+.pill.ghost{border-color:rgba(244,242,239,.5)}
+.pill.ghost:hover{background:var(--ink);color:#000}
+.pill.pick{background:var(--ink)!important;color:#000!important}
+.frame.inv{background:#f4f2ef;color:#000}
+.frame.inv .pill{background:transparent;color:#000;border-color:rgba(0,0,0,.35)}
+.frame.inv .pill:hover{background:#000;color:#f4f2ef}
+.frame.inv .pill.ghost{border-color:rgba(0,0,0,.5)}
+.cls button.on,.layers button.on{background:var(--ink);color:#000}
+.track .srcnote{font-size:12px;color:var(--mute);margin:8px 0 0;display:flex;gap:10px;justify-content:space-between}
+.track .srcnote a{text-decoration:underline;text-underline-offset:3px}
+.track audio{width:100%}
+.spmount{width:100%;height:100%}
+.player.spot iframe{border-radius:12px}
+.toast{background:var(--ink)}
+#dot{position:fixed;top:0;left:0;z-index:300;width:19px;height:19px;margin:-9.5px 0 0 -9.5px;border-radius:50%;background:rgba(214,212,209,.9);mix-blend-mode:difference;border:1px solid transparent;pointer-events:none;opacity:0;transition:width .35s ease,height .35s ease,margin .35s ease,background .35s ease,border-color .35s ease}
+#dot.on{opacity:1}
+#dot.wide{width:52px;height:52px;margin:-26px 0 0 -26px;background:rgba(244,242,239,.14);border-color:rgba(244,242,239,.75)}
+@media(hover:none),(pointer:coarse){#dot{display:none}}
+@media(hover:hover) and (pointer:fine){html,body,button,a,.pill,.cls button,.layers button,.dot{cursor:none}}
+
+/* ===== expediente, nutre, votación en vivo ===== */
+.dossier{margin:0 0 26px}
+.dgrid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+@media(min-width:900px){.dgrid{grid-template-columns:repeat(4,1fr)}}
+.dgrid>div{background:#000;padding:18px 18px 20px}
+.dgrid h4{margin:0 0 8px;font-family:var(--font-heading);font-weight:400;font-size:19px;letter-spacing:-.01em}
+.dgrid p{margin:0;font-size:15px;line-height:1.5;color:rgba(244,242,239,.82)}
+details.dossierwrap{margin:0 0 22px;border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+details.dossierwrap summary{cursor:pointer;font-size:15px;color:var(--mute)}
+details.dossierwrap[open] summary{margin-bottom:14px}
+.nutre{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:34px}
+@media(min-width:860px){.nutre{grid-template-columns:1fr 1.4fr}}
+.nutre>div{background:#000;padding:22px}
+.nutre h4{margin:0 0 10px;font-family:var(--font-heading);font-weight:400;font-size:20px}
+.nutre p{margin:0;font-size:16px;line-height:1.5;color:rgba(244,242,239,.85)}
+.nutre ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.nutre li{font-size:15.5px;line-height:1.45;padding-left:20px;position:relative;color:rgba(244,242,239,.85)}
+.nutre li::before{content:'—';position:absolute;left:0;color:var(--mute)}
+.trackcue{margin:0;font-size:14px;line-height:1.4;color:rgba(244,242,239,.8);border-left:2px solid var(--ink);padding-left:10px}
+.cnt{opacity:.6;margin-left:6px;font-variant-numeric:tabular-nums}
+.live-only{display:none!important}
+body.live-on .live-only{display:inline-flex!important}
+body.live-on .tools.live-only{display:flex!important}
+.pill.on{background:var(--ink)!important;color:#000!important}
+.overlay [data-join]{display:none}
+body.live-on .overlay [data-join]{display:block}
+#join{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.92);display:none;place-items:center;padding:20px}
+#join.on{display:grid}
+.joinbox{width:min(520px,100%);display:flex;flex-direction:column;gap:12px;align-items:flex-start;max-height:100%;overflow:auto}
+.joinbox h3{font-family:var(--font-heading);font-weight:400;font-size:32px;margin:0}
+#joinQr img{width:min(260px,70vw);height:auto;image-rendering:pixelated;background:#fff;padding:10px;border-radius:6px;display:block}
+#joinUrl{font-size:22px;margin:0;word-break:break-all}
+#joinOther,#joinStat{font-size:14px;color:var(--mute);margin:0}
+</style></head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas><div id="bgShade"></div>
+<header class="nav">
+  <a href="#top" class="wordmark" aria-label="La sala de remezclas">Sala de <em>Remezclas</em></a>
+  <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false"><span class="menu-label">Menú</span><span class="bars"><i></i><i></i></span></button>
+</header>
+<div class="overlay" id="overlay">
+  <nav>
+    <a href="index.html">El portal</a>
+    <a href="#tribunal">El tribunal del oído</a>
+    <a href="#objetos">Cinco objetos</a>
+    <a href="#casos">Los casos</a>
+    <a href="#capas">La canción por capas</a>
+    <a href="#final">Caso final</a>
+    <button class="u" data-cm>Modo clase</button>
+    <button class="u" data-join>Conectar estudiantes</button>
+  </nav>
+  <div class="addr">Música, sampling y derecho de autor en Colombia<br>Decisión Andina 351 · Ley 23 de 1982</div>
+</div>
+<div id="join" role="dialog" aria-label="Conectar estudiantes"><div class="joinbox">
+  <button class="pill ghost" data-join-close style="align-self:flex-end">Cerrar</button>
+  <p class="kick">Estudiantes · misma red Wi-Fi</p><h3>Entren a esta dirección</h3>
+  <div id="joinQr"></div><p id="joinUrl"></p><p id="joinOther"></p><p id="joinStat"></p>
+  <div class="tools"><button class="pill ghost" data-live-toggle>Cerrar / reabrir votación</button><button class="pill ghost" data-live-clear>Borrar todos los votos</button></div>
+</div></div>
+<div id="dot"></div>
+<section class="hero" id="top">
+  <div class="hero-in">
+    <div class="blur" aria-hidden="true">Hola, bienvenidos a la clase de hoy,<br>Música, sampling y derecho de autor en Colombia</div>
+    <p class="type" id="type"></p>
+    <div class="pills" id="pills">
+      <a class="pill" href="#tribunal">Abrir el tribunal del oído</a>
+      <a class="pill" href="#casos">Ver los casos hito</a>
+      <a class="pill" href="#capas">Construir la canción por capas</a>
+      <a class="pill" href="#final">Resolver el sample de salsa</a>
+      <button class="pill ghost" id="cfgAll"><span>Configurar la música: <u>pegar enlaces de las canciones</u></span></button>
+    </div>
+  </div>
+  <div class="drag-hint"><span class="tip">Mueva el cursor para recorrer la onda.</span><span>Portada:</span><button data-cover="A" aria-pressed="true">Onda</button><button data-cover="B" aria-pressed="false">Consola</button></div>
+</section>
+<main id="deck"></main>
+<div class="hud"><span id="count">1</span><span class="keys"><span class="tip2">← → navegar · N notas · F pantalla completa</span><button id="notesBtn">Notas</button><button id="exitCm">Salir</button></span></div>
+<aside class="notes" id="notes"><h4 id="notesH">Notas del docente</h4><div id="notesB"></div></aside>
+<div class="toast" id="toast"></div>
+<script src="vendor/qrcode.min.js"></script>
+<script>
+const PAIRS=[
+ {id:1,a:{t:'Got to Give It Up',ar:'Marvin Gaye · 1977',q:'Marvin Gaye Got to Give It Up official'},b:{t:'Blurred Lines',ar:'Robin Thicke, Pharrell · 2013',q:'Robin Thicke Blurred Lines official'},hint:'Escuche el bajo y los cencerros del arranque de las dos.'},
+ {id:2,a:{t:"Let's Get It On",ar:'Marvin Gaye · 1973',q:"Marvin Gaye Let's Get It On official audio"},b:{t:'Thinking Out Loud',ar:'Ed Sheeran · 2014',q:'Ed Sheeran Thinking Out Loud official'},hint:'La progresión de acordes de la estrofa.'},
+ {id:3,a:{t:'Don Diablo',ar:'Miguel Bosé · 1980',q:'Miguel Bosé Don Diablo'},b:{t:'Levitating',ar:'Dua Lipa · 2020',q:'Dua Lipa Levitating official'},hint:'La escala descendente de la estrofa.'},
+ {id:4,a:{t:'Loca con su tíguere',ar:'Ramón Arias Vásquez · 1996',q:'Loca con su tiguere Ramon Arias Vasquez'},b:{t:'Loca',ar:'Shakira ft. El Cata · 2010',q:'Shakira Loca El Cata official'},hint:'El estribillo completo.'},
+ {id:5,a:{t:'Dem Bow',ar:'Shabba Ranks · 1990',q:'Shabba Ranks Dem Bow'},b:{t:'Provenza',ar:'Karol G · 2022',q:'Karol G Provenza official'},hint:'Solo la percusión: boom-ch-boom-chick.'}
+];
+const SLIDES=[
+{type:'chapter',id:'tribunal',num:'01',title:'El tribunal del oído',sub:'La clase vota con el oído antes de saber nada de derecho. Esa votación vuelve al final.',notes:'Apertura. No revele resultados judiciales en este bloque.'},
+{type:'rules',kicker:'Diapositiva 2',title:'Reglas del tribunal',items:['Se escuchan 20 segundos de cada canción del par.','Se vota: copia, no copia, o se parece pero no sé.','No se discute todavía. La discusión llega en el bloque 04.','El resultado queda guardado y se compara con la segunda votación al cierre.'],
+ notes:'El propósito es que la clase se comprometa con una intuición que luego tendrá que defender o abandonar. Si alguien pregunta "¿pero quién ganó?", responda que eso se decide en el bloque 04.'},
+{type:'tribunal',round:1,kicker:'Diapositiva 3',title:'Los cinco pares',lead:'Reproduzca A, luego B, y registre el conteo de manos.',
+ notes:'Si el salón no tiene audio confiable, use solo los pares 1, 2 y 4, que son los más reconocibles.\n\nAdvertencia sobre el par 5: el 1 de septiembre de 2026 el juez Birotte desestimó la teoría central del caso del dembow; quedan vivas reclamaciones por sampling directo del fonograma. En el par 5 la canción B es un ejemplo cualquiera con dembow; puede cambiarla por la que prefiera en la configuración.'},
+{type:'results',round:1,kicker:'Diapositiva 4',title:'Primer resultado',lead:'El docente no corrige nada. Los porcentajes quedan guardados para el cierre.',notes:'Anote los porcentajes y siga. No corrija.'},
+{type:'chapter',id:'objetos',num:'02',title:'Una canción = cinco objetos jurídicos',sub:'El error más común es creer que "la canción" es una sola cosa con un solo dueño.',notes:'Bloque de 30 minutos.'},
+{type:'cards',kicker:'Diapositiva 5 · Mapa conceptual',title:'Cinco objetos, cinco titulares, cinco regímenes',cols:5,
+ items:[{t:'Obra musical',d:'Melodía, armonía y estructura compuestas.',tag:'Compositor · Decisión 351 arts. 3–4'},{t:'Letra',d:'Texto literario cantable; obra en colaboración con la música.',tag:'Letrista · Ley 23 art. 18'},{t:'Interpretación',d:'La ejecución por cantante o músico.',tag:'Intérprete · Decisión 351 arts. 34–36'},{t:'Fonograma',d:'La fijación sonora concreta: el master.',tag:'Productor fonográfico · arts. 37–38'},{t:'Imagen y nombre',d:'Rostro, voz reconocible, nombre artístico.',tag:'La persona · derecho fundamental'}],
+ key:'Una autorización sobre uno de estos objetos no cubre automáticamente los demás.',
+ notes:'La distinción obra / fonograma es la que más cuesta. Use el ejemplo de los covers: un cover nuevo necesita licencia del compositor, pero no del productor del fonograma original, porque no usa esa grabación. Un sample sí usa la grabación: necesita las dos licencias.'},
+{type:'poll',kicker:'Diapositiva 6 · Ejercicio relámpago',title:'"Thinking Out Loud" suena en un bar de Cali',lead:'¿A cuántos titulares distintos hay que pagar?',timer:300,options:['Uno','Dos','Tres o más','Ninguno, el bar ya pagó internet'],answer:2,
+ key:'Al menos tres: compositores vía Sayco, intérprete y productor fonográfico vía Acinpro, recaudados por la Organización Sayco Acinpro (OSA).',
+ notes:'Explique que OSA es ventanilla única de recaudo para comunicación pública, no para samples ni sincronizaciones.'},
+{type:'cards',kicker:'Diapositiva 7 · Decisión Andina 351',title:'¿Puede una canción ser obra?',lead:'Mismo filtro que el tatuaje: original, expresada, reproducible.',cols:2,
+ items:[{t:'No es obra',d:'Una progresión de acordes, un tempo, un género, un "vibe", un patrón rítmico de dominio común.'},{t:'Sí es obra',d:'Una melodía concreta, una letra concreta, un arreglo con aporte propio.'}],
+ src:'Decisión 351 arts. 3, 4 y 7; Ley 23 arts. 1–2.',notes:'Insista: se protege la forma de expresión, no la idea.'},
+{type:'classify',kicker:'Diapositiva 8 · Microtaller · 7 minutos',title:'Idea ≠ expresión',lead:'Toque cada tarjeta para revelar.',timer:420,
+ rows:[['"Una balada en 6/8 sobre un amor que se fue"','Idea'],['El estribillo de "Lupita" de Grupo Niche','Expresión'],['El dembow como patrón rítmico','Idea / dominio común'],['La línea de bajo de "Billie Jean"','Expresión: obra y fonograma'],['Cantar en falsete con autotune','Estilo'],['Dos segundos del trombón grabado en 1978','Fonograma']],
+ key:'El estilo y el género no se monopolizan; lo protegible es la expresión concreta y, aparte, la grabación concreta.',src:'Decisión 351 art. 7.',
+ notes:'Dé 3 minutos para clasificar y 4 para discusión. El dembow es el caso discutible: trabájelo con el caso Fish Market más adelante.'},
+{type:'versus',invert:true,kicker:'Diapositiva 9 · Artículo 6 · Decisión 351',title:'Soporte ≠ derecho',left:{h:'El disco, el vinilo, el archivo',d:'Comprarlo no otorga derechos sobre la obra ni sobre el fonograma.'},right:{h:'La obra y el master',d:'Los derechos son independientes del objeto material que los contiene.'},
+ key:'Mismo principio que el cuerpo tatuado: poseer el soporte no es poseer el derecho.',src:'Decisión 351, art. 6.',notes:'Conecte con la clase anterior.'},
+{type:'chapter',id:'tension',num:'03',title:'Derechos en tensión',sub:'En música el conflicto típico es artista contra artista, o artista contra su propia disquera.',notes:'Bloque de 35 minutos.'},
+{type:'cards',kicker:'Diapositiva 10',title:'Derechos patrimoniales: piense en verbos',cols:4,
+ items:[{k:'⧉',t:'Reproducir',d:'Grabar, samplear, subir a una plataforma.'},{k:'◌',t:'Comunicar',d:'Radio, bar, concierto, streaming.'},{k:'⇢',t:'Distribuir',d:'Vender copias físicas o digitales.'},{k:'↺',t:'Transformar',d:'Versionar, remezclar, traducir la letra.'}],
+ key:'Subir a YouTube son dos actos: reproducción y puesta a disposición.',src:'Decisión 351 arts. 13–15; Ley 23 art. 12 (mod. Ley 1915/2018).',notes:'El enfoque verbal evita el error "¿usó la canción?".'},
+{type:'versus',kicker:'Diapositiva 11',title:'Derechos morales del compositor',left:{h:'Paternidad',d:'Que su nombre acompañe la obra.'},right:{h:'Integridad',d:'Oponerse a deformación o mutilación.'},
+ bullets:['¿Puede un compositor impedir que su balada se convierta en reggaetón?','¿Y que se use en una campaña política?'],src:'Decisión 351 art. 11; Ley 23 art. 30.',notes:'Abra la tensión sin cerrarla. El remix autorizado contractualmente puede chocar con integridad; discuta límites.'},
+{type:'cards',kicker:'Diapositiva 12 y 13 · Derechos conexos',title:'El intérprete y el productor también tienen derechos',cols:2,
+ items:[{t:'Intérprete',d:'Autoriza la fijación y reproducción de su interpretación y la comunicación pública de la interpretación fijada. El músico de sesión que tocó el piano en un master famoso.',tag:'Ley 23 arts. 166–171; Ley 1403/2010'},{t:'Productor fonográfico',d:'Titular del master. Es quien demanda por el sample, no el compositor. ¿Quién es el productor cuando un artista independiente graba en su cuarto?',tag:'Decisión 351 art. 37; Ley 23 art. 172'}],
+ notes:'El productor independiente que financia y fija la grabación es productor fonográfico aunque sea el mismo artista. Eso cambia quién licencia el sample.'},
+{type:'flow',kicker:'Diapositiva 14',title:'Gestión colectiva en Colombia',items:[['Sayco','Compositores y editores: obra'],['Acinpro','Intérpretes y productores: conexos'],['OSA','Ventanilla única de recaudo por comunicación pública'],['Licencia directa','Samples, sincronización, covers: nadie los gestiona colectivamente']],
+ key:'Las sociedades recaudan comunicación pública. No licencian samples ni sincronizaciones: eso es contrato directo con el titular.',notes:'Pregunte quién paga en un concierto, en una serie de Netflix y en un reel de Instagram.'},
+{type:'versus',kicker:'Diapositiva 15',title:'Estados Unidos ≠ Europa ≠ Colombia',vs:true,left:{h:'Fair use y de minimis',d:'Cláusulas abiertas de EE. UU. Blurred Lines, Sheeran y Levitating se discuten ahí.',tag:'No existen en Colombia'},right:{h:'Limitaciones taxativas',d:'Colombia: lista cerrada y regla de los tres pasos. Europa desde 2026: además, excepción de pastiche.',tag:'Decisión 351 arts. 21–22'},
+ key:'Error de examen: "es fair use porque es homenaje". En Colombia esa conclusión exige una excepción escrita.',notes:'La regla de los tres pasos: casos especiales, sin atentar contra la explotación normal, sin perjuicio injustificado.'},
+{type:'poll',kicker:'Diapositiva 16 · Caso relámpago',title:'Un cantante de Cali graba un cover de un vallenato clásico, lo sube a YouTube y monetiza',lead:'¿Qué licencias necesita?',timer:180,
+ options:['Solo del compositor','Compositor y productor del fonograma original','De nadie, es homenaje','Depende del acuerdo YouTube–Sayco'],answer:0,
+ key:'Del compositor, por licencia directa o el sistema de licencias de la plataforma. No del productor del fonograma original, porque no usó esa grabación. El homenaje no es excepción en Colombia.',
+ notes:'Content ID redirige ingresos, no otorga licencia de transformación. En EE. UU. existe licencia obligatoria de cover (sección 115); en Colombia no, el cover requiere autorización del titular.'},
+{type:'chapter',id:'casos',num:'04',title:'Los casos que cambiaron la conversación',sub:'Un péndulo: el jurado protege el "ambiente", los tribunales recortan, y 2026 abre preguntas nuevas sobre el sample y el ritmo.',notes:'Bloque de 45 minutos. Cada caso cierra con la misma pregunta: ¿y en Colombia?'},
+{type:'case',pair:1,kicker:'Diapositiva 17 · Caso 1 · Williams v. Gaye (2015–2018)',title:'Blurred Lines: cuando el jurado protege el groove',
+ items:[['2013','Blurred Lines sale al mercado; no samplea ni copia melodía de Got to Give It Up.'],['2015','Jurado de Los Ángeles condena a Thicke y Pharrell.'],['2018','El Noveno Circuito confirma; un salvamento de voto advierte que se está protegiendo un género.']],
+ key:'Lección: un veredicto de jurado puede proteger de más. Lo que dijo la disidencia es lo que luego adoptaron otros tribunales.',src:'Williams v. Gaye, 895 F.3d 1106 (9th Cir. 2018).',
+ notes:'No enseñe Blurred Lines como "la regla". Es el caso que todos los tribunales posteriores han tratado de no repetir. Traducción a Colombia: un perito tendría que identificar expresión concreta copiada, no "sensación".'},
+{type:'case',pair:2,kicker:'Diapositiva 18 · Caso 2 · Sheeran (2023–2025)',title:'Thinking Out Loud: los acordes son de todos',
+ items:[['2023','Jurado de Nueva York absuelve en la demanda de los herederos de Townsend.'],['nov 2024','Segundo Circuito: progresión de acordes y ritmo armónico no son protegibles en combinación.'],['16 jun 2025','La Corte Suprema niega el certiorari a Structured Asset Sales.']],
+ key:'Lección: los elementos comunes del oficio no se monopolizan.',src:'Structured Asset Sales v. Sheeran (2d Cir. 2024); cert. denied (2025).',
+ notes:'Ponga el par 2 y pida a la clase que tararee la progresión: casi todos pueden, porque es un lugar común del pop.'},
+{type:'case',pair:3,kicker:'Diapositiva 19 · Caso 3 · Dua Lipa (2022–2025)',title:'Levitating: tres demandas, tres objetos',
+ items:[['2023','Artikal Sound System: desestimada, sin prueba de acceso a la canción.'],['mar 2025','Brown y Linzer (Don Diablo): desestimada, escala descendente genérica, citando a Sheeran.'],['Pendiente','Bosko Kante: una grabación de talkbox usada en remixes. Esa sí es sobre el fonograma.']],
+ key:'Lección: la misma canción puede enfrentar demandas sobre la obra y sobre el fonograma, con reglas distintas.',src:'Larball Publishing v. Dua Lipa (S.D.N.Y. 2025).',
+ notes:'Verificar la semana de la clase el estado de la demanda Kante.'},
+{type:'steps',kicker:'Diapositiva 20 · Método de traducción · 5 minutos',title:'Sheeran, pero en Colombia',cols:3,
+ items:['¿Existe una obra original protegida?','¿Quién es autor y quién titular patrimonial?','¿Qué acto de explotación se realizó?','¿Quién autorizó y qué?','¿Hay una limitación aplicable?','¿Qué cambia si la copia es del fonograma y no de la obra?'],
+ key:'Las mismas seis preguntas del caso Tyson. El método no cambia; cambia el objeto.',notes:'Mantenga a los estudiantes en derecho colombiano.'},
+{type:'case',pair:4,kicker:'Diapositiva 21 · Caso 4 · Shakira, Loca (2014)',title:'La cadena de títulos se rompe en el eslabón más débil',
+ items:[['1996','Ramón Arias Vásquez compone "Loca con su tíguere".'],['2007','El Cata lanza su versión; se presenta como autor.'],['2010','Shakira adapta la versión de El Cata para "Sale el Sol".'],['2014','Juez federal de Nueva York: infracción; Shakira no fue demandada; Sony y las editoras sí.']],
+ key:'Lección: quien licencia una obra ajena responde aunque haya pagado de buena fe a quien no era titular.',src:'Mayimba Music v. Sony (S.D.N.Y. 2014).',
+ notes:'Pregunta: ¿qué debió pedir Sony antes de grabar? Registro, cadena de cesiones, declaración de autoría con garantía.'},
+{type:'timeline',kicker:'Diapositiva 22 · Caso 5 · La Bicicleta (2019)',title:'Shakira y Carlos Vives: la prueba pericial decide',
+ items:[['Demanda','El cubano Livam alega copia de "Yo te quiero tanto" (1997).'],['SGAE','Congela las regalías de la canción durante el pleito.'],['2019','Juzgado Mercantil 12 de Madrid desestima: cuatro palabras iguales, sin coincidencia melódica, armonía y tempo distintos.']],
+ key:'Lección: el litigio tiene costo económico aun cuando se gana.',notes:'Shakira tarareó fragmentos en la audiencia. Buen momento para hablar de la prueba pericial musical en Colombia.'},
+{type:'timeline',kicker:'Diapositiva 23 · Caso 6 · Pelham II, TJUE, 14 de abril de 2026',title:'Dos segundos de Kraftwerk y la excepción de pastiche',
+ items:[['1997','Pelham usa dos segundos de "Metall auf Metall" en bucle.'],['2019 · Pelham I','El sample reconocible invade el derecho del productor fonográfico.'],['2026 · Pelham II','Pastiche: evocar la obra, diferenciarse perceptiblemente, entablar un diálogo artístico reconocible.']],
+ key:'En Europa el sample tiene ahora una puerta, estrecha y con condiciones. En Colombia no existe: es modelo de reforma, no regla aplicable.',src:'TJUE, C-590/23.',
+ notes:'Tres condiciones acumulativas. Pregunte si el sample del caso final cumpliría alguna.'},
+{type:'case',pair:5,kicker:'Diapositiva 24 · Caso 7 · El dembow (2021–2026)',title:'Steely & Clevie contra el reggaetón',
+ items:[['2021','Demanda contra más de 150 artistas, incluidos Karol G, J Balvin y Daddy Yankee, por casi 2.000 canciones.'],['2 jul 2026','Juez Birotte: solo un jurado puede decidir si el ritmo de Fish Market es protegible.'],['1 sep 2026','Reconsidera y desestima la teoría central: los "elementos de Fish Market" eran un collage de varias canciones.'],['Pendiente','Reclamaciones por sampling directo del fonograma.']],
+ key:'Lección: nadie es dueño de un género; pero sí se puede ser dueño de una grabación concreta de ese género.',src:'Steely & Clevie Productions v. Bad Bunny et al. (C.D. Cal.).',
+ notes:'Ponga el par 5 y pida que separen con las manos "el ritmo" de "la grabación". Es la mejor forma de entender por qué la demanda se partió en dos.'},
+{type:'poll',kicker:'Diapositiva 25 · Jurado · 4 minutos',title:'¿El dembow es idea, expresión o fonograma?',lead:'Y después: ¿qué parte de la demanda habría prosperado en Colombia?',timer:240,
+ options:['Idea: patrón rítmico libre','Expresión protegida','Fonograma: solo la grabación concreta','Las tres cosas según el acto'],answer:3,
+ key:'Copiar el patrón rítmico es tomar una idea libre; samplear Pounder Dub Mix II es reproducir un fonograma y requiere licencia.',notes:'No busque respuesta binaria.'},
+{type:'matrixcases',kicker:'Diapositiva 26',title:'Tabla comparada',rows:[['Blurred Lines','Obra (groove)','Condena confirmada 2018','Jurado + similitud sustancial'],['Sheeran','Obra (acordes)','Absuelto; certiorari negado 2025','Elementos comunes no protegibles'],['Levitating','Obra, y fonograma en la pendiente','Dos desestimadas; una abierta','Acceso + originalidad'],['Loca','Obra (cadena de títulos)','Infracción declarada 2014','Licencia de obra ajena'],['La Bicicleta','Obra (letra y melodía)','Desestimada 2019','Prueba pericial'],['Pelham II','Fonograma (sample)','Criterios fijados abril 2026','Excepción de pastiche'],['Dembow','Obra (ritmo) y fonograma','Teoría central desestimada sept. 2026','Un ritmo no se monopoliza']],cols:['Caso','Objeto','Resultado','Doctrina'],
+ notes:'Estado de Levitating (Kante) y dembow (sampling) verificado al 14 de octubre de 2026.'},
+{type:'chapter',num:'Pausa · 10 min',title:'Pausa',sub:'Al volver: la canción por capas.',timer:600,notes:'Pausa real.'},
+{type:'chapter',id:'capas',num:'05',title:'Colombia aplicada: la canción por capas',sub:'Se construye una canción en vivo y cada capa trae una relación jurídica que hay que nombrar antes de que suene la siguiente.',notes:'Bloque de 25 minutos.'},
+{type:'rules',kicker:'Diapositiva 28',title:'Reglas del estudio',items:['El docente o un estudiante con una app de loops va añadiendo capas.','Antes de cada capa, la clase responde: ¿qué objeto entra?, ¿quién es titular?, ¿qué licencia falta?','La capa se enciende solo cuando la clase responde las tres.'],notes:'Si no hay forma de hacer sonar la canción, la actividad funciona igual con la tabla en pantalla.'},
+{type:'layers',kicker:'Diapositiva 29',title:'Las seis capas',lead:'Toque cada capa para encenderla y revelar su régimen.',
+ items:[{t:'Beat de una librería gratuita','o':'Fonograma (y posible obra)',l:'Leer la licencia: ¿uso comercial?, ¿atribución?, ¿sublicencia?'},{t:'Melodía improvisada por un estudiante',o:'Obra nueva',l:'Ninguna: nace el derecho de autor del estudiante.'},{t:'Sample de dos segundos de un trombón de salsa de los 70',o:'Fonograma ajeno + obra ajena',l:'Dos licencias: productor del fonograma y compositor o editora.'},{t:'Letra que cita un verso de un poeta colombiano vivo',o:'Obra literaria ajena',l:'Licencia del autor, salvo cita (art. 22) con nombre, fuente y medida justificada.'},{t:'La voz de otro estudiante',o:'Interpretación',l:'Autorización del intérprete para fijar y explotar; derechos conexos.'},{t:'Se sube a Spotify a nombre del docente',o:'Comunicación pública + distribución',l:'Contrato con distribuidora; quién figura como productor y como autores.'}],
+ notes:'La capa 1 es la trampa: casi todos asumen que "gratis" significa "libre". Tenga a mano una licencia real de una librería de samples. La capa 4 permite enseñar el derecho de cita como única excepción que sirve en una canción.'},
+{type:'cards',kicker:'Diapositiva 30 · Prevención',title:'El contrato de producción musical debería resolver seis preguntas',cols:3,
+ items:[{t:'Autoría',d:'¿Quién es autor de qué: letra, música, arreglo?'},{t:'Fonograma',d:'¿Quién es productor fonográfico del master?'},{t:'Cesiones y licencias',d:'¿Qué modalidades, tiempo y territorio? Sin plazo: cinco años. Sin territorio: el país.'},{t:'Regalías',d:'¿Cómo se reparten las de obra y las de master?'},{t:'Origen ajeno',d:'¿Quién responde si una capa tenía dueño?'},{t:'Derechos morales',d:'¿Qué pasa con paternidad e integridad en remixes?'}],
+ src:'Ley 23 arts. 20, 183–185; Decisión 351 arts. 30–31.',notes:'Decisión 351 art. 31: las licencias se entienden limitadas a lo pactado expresamente.'},
+{type:'lab',kicker:'Diapositiva 31 · Trabajo en parejas',title:'Laboratorio de cláusulas · 8 minutos',lead:'Redacte una cláusula de split de regalías para la canción construida en clase que proteja a quien hizo la melodía (capa 2) y a quien puso la voz (capa 5).',timer:480,
+ options:['Obra: letra y música','Master: productor','Interpretación','Sublicencias','Plazo y territorio','Remuneración'],bulletsTitle:'Checklist mínimo',bullets:['Porcentajes por obra y por master, separados','Quién figura como productor fonográfico','Autorización del intérprete y su remuneración','Garantía de que ninguna capa tiene dueño ajeno','Qué pasa con remixes y versiones','Reserva de derechos morales'],
+ key:'Después: intercambie con otra pareja y encuentre la ambigüedad que podría generar litigio.',notes:'No entregue un modelo antes del ejercicio.'},
+{type:'cards',kicker:'Diapositiva 32 · Mapa probatorio',title:'Si mañana hay litigio, ¿qué debería existir hoy?',cols:4,
+ items:[{t:'Archivos de proyecto',d:'Ableton, FL Studio, Logic, con fecha.'},{t:'Stems separados',d:'Cada capa como archivo propio.'},{t:'Conversaciones',d:'WhatsApp del proceso, referencias, aprobaciones.'},{t:'Split sheet o contrato',d:'Porcentajes, titulares, licencias.'},{t:'Registro DNDA',d:'Declarativo, no constitutivo (art. 53).'},{t:'ISRC e ISWC',d:'Códigos del fonograma y de la obra.'},{t:'Licencias de librerías',d:'Guardadas en PDF con fecha.'},{t:'Licencias previas',d:'Valor de mercado y práctica contractual.'}],
+ notes:'En creación digital la trazabilidad es mejor que un testimonio años después.'},
+{type:'flow',kicker:'Diapositiva 33',title:'¿Dónde se resuelve un conflicto musical en Colombia?',numbered:true,items:[['Negociación','Carta, requerimiento, licencia posterior.'],['Conciliación','Centro de Conciliación y Arbitraje DNDA.'],['Proceso','DNDA en funciones jurisdiccionales (Ley 1564/2012 art. 24) o juez civil.'],['Plataformas','Content ID y reclamaciones: vía paralela, no jurisdiccional.']],
+ key:'Primero titularidad, urgencia, prueba, remedio y costo. Después la vía.',notes:'La reclamación en plataforma puede ser más rápida que cualquier proceso, pero no declara derechos.'},
+{type:'chapter',id:'final',num:'06',title:'Caso final: el sample de salsa en Cali',sub:'Una controversia caleña completa, con cuatro partes y vacíos deliberados.',notes:'20 minutos: 5 preparación, 8 alegaciones, 7 decisión.'},
+{type:'facts',kicker:'Diapositiva 34 · Hechos',title:'El productor, la cantante, la orquesta y la disquera',
+ items:['Un productor de reggaetón de Cali, de 24 años, toma dos segundos de la sección de vientos de una salsa grabada en 1978 por una orquesta caleña ya disuelta. Lo pone en bucle como gancho.','La canción la canta una artista emergente que no firmó nada; acordaron "mitad y mitad" por WhatsApp.','La canción se vuelve viral en TikTok y suena en bares de toda la ciudad. Una distribuidora la sube a las plataformas con el productor como único titular.','Aparecen tres reclamantes: la hija del trombonista que compuso el arreglo, la disquera que dice ser dueña del master de 1978 y la cantante, que pide la mitad de todo.','En el proceso se descubre que el contrato entre el estudio y la orquesta nunca se encontró.'],
+ options:['Productor','Heredera del arreglista','Disquera de 1978','Cantante'],key:'La clase se divide en cuatro equipos.',
+ notes:'No añada hechos. El contrato perdido es intencional: obliga a la disquera a probar titularidad del fonograma con otros medios.'},
+{type:'cards',kicker:'Diapositiva 35 · Moot court exprés',title:'Preparación de equipos · 5 minutos',cols:4,timer:300,
+ items:[{t:'Productor',d:'El fragmento es mínimo, transformado, y el patrón de vientos es estilo, no obra.'},{t:'Heredera del arreglista',d:'El arreglo de vientos es obra original de su padre, reproducida y transformada sin licencia.'},{t:'Disquera de 1978',d:'Titularidad del fonograma y reproducción no autorizada; debe probar la cadena de títulos sin el contrato.'},{t:'Cantante',d:'Derechos conexos de intérprete y coautoría, con el chat de WhatsApp como única prueba.'}],
+ key:'60 segundos por equipo, una pretensión concreta. Prohibido decir "fair use" salvo para explicar por qué no aplica; "pastiche" solo si se aclara que es derecho europeo.',notes:'Cronometre. Permita 30 segundos de réplica a dos equipos enfrentados.'},
+{type:'matrix',kicker:'Diapositiva 36 · Matriz de decisión',title:'El juez distribuye, no elige un ganador',lead:'Toque cada punto: vacío → a favor → en contra → mixto.',cols:['Productor','Heredera','Disquera','Cantante'],rows:['Obra protegida','Fonograma','Interpretación','Cadena de títulos','Acto de explotación','Excepción','Prueba','Remedio'],
+ key:'El productor puede deber licencia a dos titulares distintos y a la vez tener razón frente a la cantante en la coautoría, pero no en sus derechos conexos.',notes:'Pida al juez estudiante una decisión de dos minutos que distinga cada relación.'},
+{type:'test',id:'test',invert:true,kicker:'Diapositiva 37 · Herramienta de decisión',title:'El test de 7 preguntas para cualquier canción',
+ items:['¿Qué objeto concreto está protegido: obra, letra, interpretación o fonograma?','¿Quién lo creó y quién es titular hoy?','¿Qué elementos son originales y cuáles del oficio común?','¿Qué acto de explotación se realizó?','¿Qué contrato, licencia o split existe?','¿Hay una limitación aplicable?','¿Qué prueba y qué remedio sostienen el caso?'],
+ key:'Si una respuesta falta, todavía no tiene un caso: tiene una intuición.',notes:'Resumen metodológico. Los estudiantes pueden fotografiarlo.'},
+{type:'tribunal',round:2,kicker:'Diapositiva 38',title:'Segunda votación',lead:'Los mismos cinco pares. Vuelva a escuchar y registre el conteo.',notes:'Ahora sí: compare con la primera.'},
+{type:'results',round:2,kicker:'Diapositiva 38',title:'Primera votación contra segunda',lead:'¿Qué cambió en el oído de la clase?',notes:'La diferencia entre las dos votaciones es la discusión de cierre.'},
+{type:'rules',kicker:'Diapositiva 39 · Cierre',title:'Diez reglas para no perderse',items:['Una canción es al menos cuatro objetos: obra, letra, interpretación y fonograma.','Parecerse no es infringir; se infringe copiando expresión concreta y original.','Acordes, tempo, género y ritmo son del oficio común, no de nadie.','Una grabación concreta sí tiene dueño, aunque el ritmo que contiene no lo tenga.','El cover necesita licencia del compositor; el sample, además, la del productor del fonograma.','"Gratis" en una librería de beats no significa "libre": la licencia es el contrato.','Quien licencia una obra ajena responde aunque haya pagado de buena fe a quien no era titular.','El intérprete sin contrato sigue teniendo derechos conexos; lo que no tiene es prueba fácil.','Fair use y pastiche no son derecho colombiano; las excepciones aquí son taxativas.','Probar la copia, probar la titularidad y probar el daño son tres batallas distintas.'],
+ notes:'Vuelva a la pregunta de apertura: ¿quién tiene que pedir permiso para que una canción suene? La respuesta ahora debe empezar por "depende de qué objeto".'},
+{type:'quote',lines:['La música es de todos.','La canción es de alguien.'],sub:'Pregunta final: ¿qué split sheet firmaría hoy antes de grabar con un amigo?',notes:'Cierre de 5 minutos. Pida una sola idea a tres estudiantes.'},
+{type:'sources',id:'fuentes',kicker:'Diapositiva 41',title:'Fuentes esenciales',
+ left:{h:'Colombia y Comunidad Andina',items:['Decisión Andina 351 de 1993 — arts. 3–7, 11, 13–15, 21–22, 33–43, 53.','Ley 23 de 1982 — arts. 2, 12, 17–18, 30, 165–176, 183–185.','Ley 1915 de 2018 y Ley 1403 de 2010.','DNDA — Registro, Asuntos Jurisdiccionales, Centro de Conciliación y Arbitraje.','Organización Sayco Acinpro — recaudo por comunicación pública.']},
+ right:{h:'Derecho comparado',items:['Williams v. Gaye, 895 F.3d 1106 (9th Cir. 2018).','Structured Asset Sales v. Sheeran (2d Cir. 2024); cert. denied 16 jun. 2025.','Larball Publishing v. Dua Lipa (S.D.N.Y. mar. 2025); demanda Kante pendiente.','Mayimba Music v. Sony, "Loca" (S.D.N.Y. 2014).','La Bicicleta, Juzgado Mercantil 12 de Madrid (2019).','Pelham II, TJUE C-590/23 (14 abr. 2026).','Steely & Clevie v. Bad Bunny et al. (C.D. Cal., jul.–sep. 2026).']},
+ key:'Casos extranjeros = material comparado, no precedente. Estado de Levitating y del dembow verificado al 14 de octubre de 2026.',notes:'Para docencia, entregue extractos de las decisiones, no resúmenes periodísticos.'}
+];
+
+</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2000)};
+const para=s=>s.split('\n\n').map(p=>`<p>${p}</p>`).join('');
+const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+
+/* ---------- expediente de cada par (se muestra en los casos y, tras la 2.ª votación, en el tribunal) ---------- */
+const PAIR_CASE={
+ 1:{caso:'Williams v. Gaye · «Blurred Lines»',
+  que:'La familia de Marvin Gaye demandó a Robin Thicke y a Pharrell Williams. «Blurred Lines» (2013) no usa ninguna grabación de «Got to Give It Up» (1977): se alegó que copiaba su «sensación» —el groove, el cencerro, el bajo, los teclados y el ambiente de fiesta—.',
+  parecido:'Cencerro y percusión del arranque, línea de bajo sincopada, coros y el aire festivo de estudio.',
+  fallo:'2015: un jurado de Los Ángeles condena. 2018: el Noveno Circuito confirma, con un voto disidente que advierte que se estaba protegiendo un género.',
+  importa:'Es el límite superior de lo que un jurado llegó a proteger: se condenó por estilo, no por una melodía copiada. Después, los tribunales evitaron repetir ese razonamiento.',
+  cueA:'Escuche el cencerro y el bajo desde el segundo 0.',cueB:'Compare: ¿mismo cencerro, mismo bajo, o la misma sensación?'},
+ 2:{caso:'Sheeran · «Thinking Out Loud»',
+  que:'Los herederos de Ed Townsend (coautor de «Let\'s Get It On») y una sociedad que adquirió parte de esos derechos demandaron a Ed Sheeran: sostenían que «Thinking Out Loud» tomaba la progresión de acordes y el ritmo armónico.',
+  parecido:'La progresión de acordes y el ritmo con que cambian, en estrofa y estribillo.',
+  fallo:'2023: un jurado de Nueva York absuelve. En la demanda paralela de Structured Asset Sales, el Segundo Circuito confirma en 2024 que esa combinación no es protegible y la Corte Suprema niega la revisión el 16 de junio de 2025.',
+  importa:'Fija que los elementos comunes del oficio no se monopolizan, aunque se combinen. Aun así, defenderse costó años y dinero.',
+  cueA:'Tararee la progresión de acordes que suena en la guitarra.',cueB:'Ahora la de Sheeran: ¿es la misma idea o la misma expresión?'},
+ 3:{caso:'Dua Lipa · «Levitating»',
+  que:'Una misma canción, tres demandas: Artikal Sound System (sin prueba de acceso), Brown y Linzer por «Don Diablo» de Miguel Bosé (escala descendente genérica) y Bosko Kante por una grabación de talkbox (pendiente).',
+  parecido:'Una escala descendente en la estrofa: algo que cualquier músico puede producir.',
+  fallo:'Dos desestimadas (2023 y marzo de 2025, citando el precedente Sheeran). La tercera sigue abierta y trata del fonograma, no de la composición.',
+  importa:'Obra y fonograma se litigan con reglas distintas: se puede ganar sobre la composición y aun así deber explicaciones por una grabación.',
+  cueA:'Escuche la escala descendente de la estrofa.',cueB:'Busque la línea descendente en «Levitating». ¿Basta con que «se oiga parecido»?'},
+ 4:{caso:'Mayimba Music v. Sony · «Loca»',
+  que:'Ramón Arias Vásquez sostuvo que «Loca» de Shakira (con El Cata) copiaba su «Loca con su tíguere». El Cata había grabado una versión y se presentaba como autor; Shakira adaptó esa versión.',
+  parecido:'El estribillo completo: letra, melodía y fraseo.',
+  fallo:'2014: un juez federal de Nueva York encontró infracción frente a las editoras y Sony; Shakira no fue demandada personalmente. El desarrollo posterior del caso y la prueba de la grabación fueron discutidos: verifique el estado actual antes de presentarlo como firme.',
+  importa:'Quien licencia o adapta una obra responde por toda la cadena de títulos: pagar a quien dice ser autor no basta.',
+  cueA:'Escuche el estribillo completo.',cueB:'Compare el estribillo: ¿quién copió a quién, y por qué importa quién licenció?'},
+ 5:{caso:'Steely & Clevie v. Bad Bunny y otros · el dembow',
+  que:'Steely & Clevie (autores del riddim «Fish Market», 1989) demandaron a más de 150 artistas, entre ellos Karol G, J Balvin y Daddy Yankee, por casi 2.000 canciones con dembow.',
+  parecido:'El patrón de percusión «boom-ch-boom-chick»: escuche solo el ritmo, no la voz.',
+  fallo:'2 de julio de 2026: el juez Birotte dice que solo un jurado puede decidirlo. 1 de septiembre de 2026: reconsidera y desestima la teoría central. Quedan vivas las reclamaciones por sampling directo del fonograma.',
+  importa:'Nadie es dueño de un género ni de un patrón rítmico; sí de una grabación concreta. La demanda se partió en idea (libre) y fonograma (con dueño).',
+  cueA:'Solo la percusión: ¿puede alguien ser dueño de este patrón?',cueB:'¿El patrón es el mismo? ¿Y la grabación? Separe «ritmo» de «master».'}
+};
+PAIRS.forEach(p=>{const c=PAIR_CASE[p.id];if(c){p.a.cue=c.cueA;p.b.cue=c.cueB}});
+function dossierHTML(pid){const c=PAIR_CASE[pid];if(!c)return '';
+  return `<div class="dossier"><p class="kick">Expediente · ${c.caso}</p><div class="dgrid">
+  <div><h4>Qué se discutió</h4><p>${c.que}</p></div>
+  <div><h4>Qué se parece (escuche)</h4><p>${c.parecido}</p></div>
+  <div><h4>Cómo terminó</h4><p>${c.fallo}</p></div>
+  <div><h4>Por qué importa</h4><p>${c.importa}</p></div></div></div>`}
+
+/* ---------- por qué importa y cómo evitarlo ---------- */
+const NUTRE={
+ 'Blurred Lines: cuando el jurado protege el groove':{
+  why:'Muestra el riesgo de que un estilo o una «sensación» se trate como copia. En Colombia no hay jurado: decide un juez con perito, pero la lección sirve para calibrar qué se le pide a un productor y qué prueba conservar.',
+  avoid:['Evite briefs del tipo «que suene exactamente como…»: deje por escrito qué se toma de la referencia (género, tempo) y qué no (melodía, letra, grabación).','Guarde el proceso: sesiones, borradores y fechas de la composición.','Si la referencia es muy cercana, pida un peritaje preventivo.','Si quiere un elemento concreto de otra obra: licencia o interpolación autorizada.']},
+ 'Thinking Out Loud: los acordes son de todos':{
+  why:'Un tercero puede reclamar por elementos comunes (progresión, ritmo armónico). Ganar cuesta años y dinero: lo que protege es poder demostrar que el elemento es del oficio común y cómo se llegó a la canción.',
+  avoid:['Conserve las grabaciones de la sesión de composición (la guitarra, la voz de referencia).','Tenga un musicólogo que separe lo común (acordes, tempo) de lo original (melodía, letra).','Contrato con garantía de originalidad y reparto de los gastos de defensa.','Ante una reclamación sobre elementos libres, evalúe con asesoría antes de pagar.']},
+ 'Levitating: tres demandas, tres objetos':{
+  why:'La misma canción recibe reclamaciones sobre la obra (la composición) y sobre el fonograma (una grabación usada en remixes). Se prueban distinto: acceso y originalidad en un caso; uso de la grabación en el otro.',
+  avoid:['Inventario de cada grabación ajena usada (talkbox, loops, voces) con su licencia.','Registre obra y fonograma por separado (ISWC / ISRC).','Documente la creación independiente y, si es el caso, la ausencia de acceso a la obra reclamante.','Exija a colaboradores y remixers cesión o licencia escrita de lo que aportan.']},
+ 'La cadena de títulos se rompe en el eslabón más débil':{
+  why:'Quien explota una obra responde por la cadena completa de títulos. Pagar al que aparecía como autor no libera si no era el titular.',
+  avoid:['Antes de grabar: verifique titularidad en registros (DNDA, sociedad de gestión) y busque versiones previas.','Exija al licenciante declaración de autoría con garantía e indemnidad.','Si hay varios reclamantes plausibles, licencie a todos o retenga pagos hasta aclarar.','Guarde la diligencia: correos, búsquedas y certificados de la época.']},
+ 'Shakira y Carlos Vives: la prueba pericial decide':{
+  why:'Ganar no sale gratis: regalías retenidas, honorarios y tiempo. Y todo se decide con peritaje musical.',
+  avoid:['Un peritaje temprano separa el parecido accidental (cuatro palabras comunes) de la copia de expresión.','Prevea en los contratos qué ocurre con regalías en disputa.','Documente la creación independiente de letra y melodía.','Tenga perito y evidencia ordenada antes de que llegue la demanda.']},
+ 'Dos segundos de Kraftwerk y la excepción de pastiche':{
+  why:'Dos segundos bastan para exigir licencia al productor fonográfico. La excepción de pastiche europea no existe en Colombia: aquí el sample sin licencia es reproducción.',
+  avoid:['Para usar una grabación ajena, por breve que sea: licencia del productor fonográfico y del titular de la obra.','Alternativa: regrabar (replay) la parte y licenciar solo la obra.','No dependa de excepciones extranjeras: en Colombia las limitaciones son taxativas.','Si el sample es identificable, trátelo como identificable aunque lo procese.']},
+ 'Steely & Clevie contra el reggaetón':{
+  why:'Muestra la frontera entre la idea libre (un patrón rítmico) y la grabación concreta con dueño. La demanda se partió en dos por eso.',
+  avoid:['Cree su propio patrón: el ritmo como idea es de todos.','No tome la grabación (timbres, bucle, mezcla) sin licencia.','Deje constancia de qué es creación propia y qué es muestra licenciada.','Reparta por escrito (split sheet) obra y master.']}
+};
+SLIDES.forEach(s=>{const n=NUTRE[s.title];if(n)Object.assign(s,n)});
+{const k=SLIDES.findIndex(s=>s.type==='matrixcases');
+ SLIDES.splice(k+1,0,{type:'cards',kicker:'Complemento · Prevención',title:'Cómo evitar que le pase a su canción',cols:4,
+  items:[{t:'Antes de componer',d:'Defina referencias, no copias: qué toma del estilo y qué no tocará (melodía, letra, grabación).'},
+         {t:'Mientras crea',d:'Trazabilidad: archivos de proyecto con fecha, stems, notas de voz y mensajes del proceso.'},
+         {t:'Si hay un sample',d:'Licencie las dos capas (productor del fonograma y titular de la obra) o regrabe y licencie solo la obra.'},
+         {t:'Con colaboradores',d:'Split sheet firmado antes de publicar: autoría, master, porcentajes y garantía de originalidad.'},
+         {t:'Antes de publicar',d:'Revise la cadena de títulos: ¿quién es titular hoy? ¿hay versiones previas? Pida garantía e indemnidad.'},
+         {t:'Duda razonable',d:'Peritaje preventivo: un musicólogo compara melodía, armonía, ritmo y letra antes del lanzamiento.'},
+         {t:'Registro',d:'DNDA (declarativo), ISRC del fonograma e ISWC de la obra; licencias de librerías en PDF con fecha.'},
+         {t:'Si llega una reclamación',d:'No responda a ciegas: congele archivos, ordene la prueba, concilie. Content ID no declara derechos.'}],
+  key:'Prevenir es documentar: cada caso de esta clase se resolvió o se perdió por lo que existía —o no— en papel y en archivos.',
+  notes:'Complemento: cierra el bloque de casos con un protocolo práctico. Relaciónelo con el mapa probatorio de la diapositiva 32.'});}
+
+const N=SLIDES.length;
+
+/* ---------- storage ---------- */
+const store={get(k,d){try{const v=localStorage.getItem('remix:'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('remix:'+k,JSON.stringify(v))}catch(e){}}};
+const SP=id=>'https://open.spotify.com/track/'+id,YT=id=>'https://www.youtube.com/watch?v='+id;
+const DEFAULT_MEDIA={
+ '1a':{src:SP('1QxE16oMgi19TWvy1YrK7B'),yt:YT('qhFNY9zW2F4'),start:0},
+ '1b':{src:SP('0XzkemXSiXJa7VgDFPfU4S'),yt:YT('yyDUC1LUXSU'),start:0},
+ '2a':{src:SP('39l1UORIhuHvUWfxG53tRZ'),yt:YT('tQj1kPmQXwE'),start:0},
+ '2b':{src:SP('5As8xJv2pK4GES8c5kgtsK'),yt:YT('lp-EO5I60KA'),start:0},
+ '3a':{src:SP('11olvsaUPHD6owYgWCPOGX'),yt:YT('lce_iJlk0Ig'),start:0},
+ '3b':{src:SP('41z2bSbbtJ9wiIee4RXdi5'),yt:YT('WHuBW3qKm9g'),start:0},
+ '4a':{src:YT('umTzxNu0uMY'),start:0},
+ '4b':{src:SP('42k1KeBehAd83lrGt1okiC'),yt:YT('XAhTt60W7qo'),start:0},
+ '5a':{src:SP('1BUBidO12VUKo44PaQvpt9'),yt:YT('HkzEZ_pFORs'),start:0},
+ '5b':{src:SP('7dSZ6zGTQx66c2GF91xCrb'),yt:YT('ca48oMV59LU'),start:0}
+};
+let media=Object.assign({},DEFAULT_MEDIA,store.get('media',{}));const localAudio={};  // key "1a" -> {src, start}
+let votes=store.get('votes',{});  // key "r1p1" -> [copia,no,duda]
+
+/* ---------- media parsing ---------- */
+function parseLink(s){s=(s||'').trim();if(!s)return null;
+  let m=s.match(/(?:youtu\.be\/|v=|\/shorts\/|\/embed\/)([A-Za-z0-9_-]{11})/);if(m)return {kind:'yt',id:m[1]};
+  m=s.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?track\/([A-Za-z0-9]+)/);if(m)return {kind:'sp',id:m[1]};
+  if(/^[A-Za-z0-9_-]{11}$/.test(s))return {kind:'yt',id:s};
+  return null}
+function pick(m){return parseLink(m.src)||parseLink(m.yt)}
+function srcHref(p){return p.kind==='sp'?'https://open.spotify.com/track/'+p.id:'https://www.youtube.com/watch?v='+p.id}
+function playerHTML(key,tr){const m=media[key]||{};
+  if(localAudio[key])return `<div class="player has spot" style="display:grid;place-items:center"><audio controls preload="auto" src="${localAudio[key]}"></audio></div><p class="srcnote"><span>Archivo local</span></p>`;
+  const p=pick(m);
+  if(!p)return `<div class="player"><div>Sin enlace todavía.<br><a href="https://open.spotify.com/search/${encodeURIComponent(tr.t+' '+tr.ar.split('·')[0])}" target="_blank" rel="noopener" style="text-decoration:underline;text-underline-offset:2px">Buscar "${esc(tr.t)}" en Spotify</a>, copie el enlace y péguelo con «Enlace», o cargue un archivo local.</div></div>`;
+  const note=`<p class="srcnote"><span>${p.kind==='sp'?'Spotify':'YouTube'}</span><a href="${srcHref(p)}" target="_blank" rel="noopener">Abrir fuente ↗</a></p>`;
+  if(p.kind==='yt'){const st=+m.start||0;return `<div class="player has"><iframe src="https://www.youtube.com/embed/${p.id}?enablejsapi=1&start=${st}&rel=0&modestbranding=1&playsinline=1${/^https?:/.test(location.protocol)?'&origin='+encodeURIComponent(location.origin):''}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media" allowfullscreen title="${esc(tr.t)}"></iframe></div>${note}`}
+  return `<div class="player has spot"><div class="spmount" data-uri="spotify:track:${p.id}"></div></div>${note}`}
+/* Spotify: las disqueras bloquean la incrustación de sus videos en YouTube (error 150) */
+const spCtl=new Map(),spQueue=new Set();let spApi=null;
+window.onSpotifyIframeApiReady=api=>{spApi=api;spQueue.forEach(mountOne);spQueue.clear()};
+(function(){const s=document.createElement('script');s.src='https://open.spotify.com/embed/iframe-api/v1';s.async=true;document.head.appendChild(s)})();
+let spFallback=false;
+setTimeout(()=>{if(!spApi){spFallback=true;spQueue.forEach(mountOne);spQueue.clear()}},5000);
+function plainSpotify(el){el._m=1;const f=document.createElement('iframe');f.src='https://open.spotify.com/embed/track/'+el.dataset.uri.split(':').pop()+'?utm_source=generator&theme=0';f.width='100%';f.height='152';f.style.border='0';f.loading='lazy';f.allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';f.title='Spotify';el.replaceWith(f)}
+function mountOne(el){if(el._m||!el.isConnected)return;if(spFallback){plainSpotify(el);return}if(!spApi){spQueue.add(el);return}el._m=1;const tr=el.closest('.track');
+  spApi.createController(el,{uri:el.dataset.uri,width:'100%',height:152},c=>{spCtl.set(tr,c);try{c.addListener('playback_update',e=>{tr._pos=(e.data.position||0)/1000})}catch(_){}})}
+const spIO='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){spIO.unobserve(e.target);mountOne(e.target)}}),{rootMargin:'700px'}):null;
+function mountSpotify(root){(root||document).querySelectorAll('.spmount').forEach(el=>spIO?spIO.observe(el):mountOne(el))}
+function trackHTML(key,tr,letter){const m=media[key]||{};return `<div class="track" data-key="${key}">
+  <div class="lbl"><div><div class="ab-letter">${letter}</div><b>${esc(tr.t)}</b></div><span>${esc(tr.ar)}</span></div>
+  ${tr.cue?`<p class="trackcue">${esc(tr.cue)}</p>`:''}<div class="pl">${playerHTML(key,tr)}</div>
+  <div class="ctl"><button class="pill" data-play="${key}">Reproducir ${letter}</button><button class="pill ghost" data-stop="${key}">Pausar</button><button class="pill ghost" data-cfg="${key}">Enlace</button></div>
+  <div class="cfg"><div class="row"><input type="url" placeholder="Pegar enlace de YouTube o Spotify" value="${esc(m.src||'')}" data-src="${key}"><input type="number" min="0" placeholder="Inicio (s)" value="${m.start||''}" data-start="${key}"></div><div class="row"><input type="number" min="1" placeholder="Duración (s); vacío = completa" value="${m.dur||''}" data-dur="${key}"><button class="pill ghost" data-mark="${key}">Marcar inicio aquí</button></div><div class="row" style="align-items:center"><button class="pill" data-save="${key}">Guardar</button><label class="pill ghost" style="cursor:pointer">Archivo local<input type="file" accept="audio/*" data-file="${key}" hidden></label></div></div>
+</div>`}
+function abHTML(pair){return `<div class="ab">${trackHTML(pair.id+'a',pair.a,'A')}${trackHTML(pair.id+'b',pair.b,'B')}</div><p class="hintline">Qué escuchar: ${esc(pair.hint)}</p><div class="tools"><button class="pill ghost" data-compare>Comparar A → B · 20 s cada una</button></div>`}
+
+/* ---------- render ---------- */
+function head(s){return `${s.kicker?`<p class="kick">${s.kicker}</p>`:''}<h2 class="ft">${s.title}</h2>${s.lead?`<p class="lead">${s.lead}</p>`:''}`}
+function foot(s,i){return `${s.key?`<p class="key">${s.key}</p>`:''}${s.timer?`<div class="tools"><button class="pill ghost tm" data-timer="${s.timer}">Iniciar ${fmt(s.timer)}</button></div>`:''}<div class="foot"><span>${s.src||''}</span><span class="n">${i+1} / ${N}</span></div>`}
+function nutre(s){if(!s.why&&!s.avoid)return '';
+  return `<div class="nutre"><div><h4>Por qué importa</h4><p>${s.why||''}</p></div><div><h4>Cómo evitarlo</h4><ul>${(s.avoid||[]).map(a=>`<li>${a}</li>`).join('')}</ul></div></div>`}
+function body(s){return bodyBase(s)+nutre(s)}
+function bodyBase(s){
+  switch(s.type){
+  case 'cards':return `<div class="grid g${s.cols}">${s.items.map(it=>`<div>${it.k?`<span class="sym">${it.k}</span>`:''}<h3>${it.t}</h3><p>${it.d}</p>${it.tag?`<span class="tag">${it.tag}</span>`:''}</div>`).join('')}</div>`;
+  case 'versus':return `<div class="vs ${s.vs?'mid':''}"><div><h3>${s.left.h}</h3><p>${s.left.d}</p>${s.left.tag?`<span class="tag">${s.left.tag}</span>`:''}</div>${s.vs?'<div class="vsmark">vs.</div>':''}<div><h3>${s.right.h}</h3><p>${s.right.d}</p>${s.right.tag?`<span class="tag">${s.right.tag}</span>`:''}</div></div>${s.bullets?`<ul class="blist">${s.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:''}`;
+  case 'classify':return `<div class="cls">${s.rows.map(r=>`<button aria-pressed="false"><span>${r[0]}</span><span>${r[1]}</span></button>`).join('')}</div>`;
+  case 'poll':return `<div class="poll" data-ans="${s.answer}">${s.options.map((o,j)=>`<button class="pill" data-o="${j}">${o}<span class="cnt"></span></button>`).join('')}</div><div class="tools"><button class="pill ghost" data-reveal>Mostrar respuesta sugerida</button><button class="pill ghost live-only" data-live-poll="${SLIDES.indexOf(s)}">Abrir a estudiantes</button><span class="livecount" style="color:var(--mute);font-size:14px"></span></div><p class="reveal">${s.options[s.answer]}. ${s.key}</p>`;
+  case 'timeline':return `<ol class="tl">${s.items.map(it=>`<li><b>${it[0]}</b><p>${it[1]}</p></li>`).join('')}</ol>`;
+  case 'case':{const p=PAIRS.find(x=>x.id===s.pair);return `<ol class="tl">${s.items.map(it=>`<li><b>${it[0]}</b><p>${it[1]}</p></li>`).join('')}</ol><div class="playcase">${dossierHTML(p.id)}<p class="kick">Escuchar el par ${p.id}</p>${abHTML(p)}</div>`}
+  case 'steps':return `<ol class="steps ${s.cols===3?'c3':''}">${s.items.map(t=>`<li>${t}</li>`).join('')}</ol>`;
+  case 'flow':return `<div class="flow">${s.items.map((it,j)=>`<div>${s.numbered?`<small>Paso ${j+1}</small>`:''}<b>${it[0]}</b><span>${it[1]}</span></div>`).join('')}</div>`;
+  case 'lab':return `<div class="teams">${s.options.map(o=>`<span class="pill">${o}</span>`).join('')}</div><p class="kick" style="margin-top:34px">${s.bulletsTitle}</p><div class="teams" style="margin-top:0">${s.bullets.map(o=>`<span class="pill ghost">${o}</span>`).join('')}</div>`;
+  case 'test':return `<ol class="test">${s.items.map((t,j)=>`<li><label><span>${t}</span><input type="checkbox" aria-label="Pregunta ${j+1}"></label></li>`).join('')}</ol><p class="test-status" data-status>0 de 7 respondidas.</p>`;
+  case 'facts':return `<ol class="facts">${s.items.map(t=>`<li>${t}</li>`).join('')}</ol><div class="teams">${s.options.map(o=>`<span class="pill">${o}</span>`).join('')}</div>`;
+  case 'matrix':return `<div class="mx"><table><thead><tr><th>Cuestión</th>${s.cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${s.rows.map(r=>`<tr><td>${r}</td>${s.cols.map(c=>`<td><button class="dot" data-s="0" aria-label="${r} — ${c}: sin marcar"></button></td>`).join('')}</tr>`).join('')}</tbody></table></div><div class="legend"><span><i class="dot" data-s="1"></i>A favor</span><span><i class="dot" data-s="2">✕</i>En contra</span><span><i class="dot" data-s="3"></i>Mixto</span><button class="pill ghost" data-clear style="margin-left:auto">Limpiar</button></div>`;
+  case 'matrixcases':return `<div class="mxc"><table><thead><tr>${s.cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${s.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  case 'rules':return `<ol class="rules">${s.items.map(t=>`<li>${t}</li>`).join('')}</ol>`;
+  case 'layers':return `<div class="layers">${s.items.map((it,j)=>`<button aria-pressed="false"><span class="n">0${j+1}</span><div><h3>${it.t}</h3><div class="rv"><span>${it.o}</span><span>${it.l}</span></div></div></button>`).join('')}</div>`;
+  case 'sources':return `<div class="src2">${[s.left,s.right].map(c=>`<div><h3>${c.h}</h3><ul>${c.items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`).join('')}</div>`;
+  case 'tribunal':return `<div class="pairnav">${PAIRS.map((p,j)=>`<button class="pill ${j?'':'sel'}" data-pair="${p.id}">Par ${p.id}</button>`).join('')}<span class="sum" style="color:var(--mute);font-size:14px;margin-left:8px">Ronda ${s.round}</span></div><div class="pairbox" data-round="${s.round}"></div><div class="tools live-only"><button class="pill ghost" data-live-trib>Abrir votación a estudiantes</button><span class="livecount" style="color:var(--mute);font-size:14px"></span></div>`;
+  case 'results':return `<div class="reslegend"><span><i style="background:#fff"></i>Copia</span><span><i style="background:rgba(255,255,255,.55)"></i>No copia</span><span><i style="background:rgba(255,255,255,.25)"></i>No sé</span></div><div class="res" data-round="${s.round}"></div><div class="tools"><button class="pill ghost" data-refresh>Actualizar</button>${s.round===1?'':'<button class="pill ghost" data-resetvotes>Borrar votaciones</button>'}</div>`;
+  }return ''}
+function frame(s,i){const id=s.id?` id="${s.id}"`:'';
+  if(s.type==='chapter'||s.type==='quote'){const inner=s.type==='quote'?`<h2 class="ft">${s.lines.map(l=>`<span>${l}</span>`).join('')}</h2><p class="lead">${s.sub}</p>`:`<div class="num" aria-hidden="true">${s.num}</div><h2 class="ft">${s.title}</h2><p class="lead">${s.sub}</p>`;
+    return `<section class="frame chap ${s.type==='quote'?'quote':''}"${id} data-i="${i}"><canvas class="chapbg" data-seed="${i}"></canvas><div class="wrap">${inner}${s.timer?`<div class="tools"><button class="pill ghost tm" data-timer="${s.timer}">Iniciar ${fmt(s.timer)}</button></div>`:''}<div class="foot"><span></span><span class="n">${i+1} / ${N}</span></div></div></section>`}
+  return `<section class="frame ${s.invert?'inv':''}"${id} data-i="${i}"><div class="wrap">${head(s)}<div class="body">${body(s)}</div>${foot(s,i)}</div></section>`}
+$('#deck').innerHTML=SLIDES.map(frame).join('');
+
+/* tribunal pair boxes */
+function renderPair(box,pid){const p=PAIRS.find(x=>x.id===pid);const r=box.dataset.round;const v=votes[`r${r}p${pid}`]||['','',''];
+  box.dataset.pid=pid;stopAll();box.innerHTML=(r==='2'?`<details class="dossierwrap"><summary>Ver el expediente de este par</summary>${dossierHTML(pid)}</details>`:'')+abHTML(p)+`<div class="vote" data-vote="r${r}p${pid}"><label>Copia<input type="number" min="0" value="${v[0]}" data-v="0"></label><label>No copia<input type="number" min="0" value="${v[1]}" data-v="1"></label><label>No sé<input type="number" min="0" value="${v[2]}" data-v="2"></label><span class="sum"></span></div>`;sumVote(box.querySelector('.vote'));mountSpotify(box)}
+function sumVote(el){const n=[...el.querySelectorAll('input')].map(i=>+i.value||0);const t=n[0]+n[1]+n[2];el.querySelector('.sum').textContent=t?`${t} votos · ${Math.round(n[0]/t*100)}% copia`:'';votes[el.dataset.vote]=[...el.querySelectorAll('input')].map(i=>i.value);store.set('votes',votes);renderResults()}
+$$('.pairbox').forEach(b=>renderPair(b,1));
+function renderResults(){$$('.res').forEach(res=>{const r=+res.dataset.round;res.innerHTML=PAIRS.map(p=>{const rounds=r===1?[1]:[1,2];return `<div class="row"><div class="nm">Par ${p.id}<small>${esc(p.a.t)} / ${esc(p.b.t)}</small></div><div class="bars">${rounds.map(k=>{const v=(votes[`r${k}p${p.id}`]||[]).map(x=>+x||0);const t=v[0]+v[1]+v[2];const pc=x=>t?Math.round(x/t*100):0;return `<div class="bar"><span>${k===1?'Inicio':'Cierre'}${t?` · ${t}`:''}</span><i>${t?`<b class="c" style="width:${pc(v[0])}%">${pc(v[0])?pc(v[0])+'%':''}</b><b class="n" style="width:${pc(v[1])}%">${pc(v[1])?pc(v[1])+'%':''}</b><b class="d" style="width:${pc(v[2])}%">${pc(v[2])?pc(v[2])+'%':''}</b>`:'<span style="padding:0 10px;font-size:12px;align-self:center">Sin votos</span>'}</i></div>`}).join('')}</div></div>`}).join('')})}
+renderResults();mountSpotify(document);
+
+/* ---------- YouTube control ---------- */
+function ytCmd(tr,fn,args){const f=tr&&tr.querySelector('iframe[src*="youtube.com"]');if(f&&f.contentWindow)f.contentWindow.postMessage(JSON.stringify({event:'command',func:fn,args:args||[]}),'*')}
+var playTimer=null;
+function stopAll(){clearTimeout(playTimer);$$('iframe[src*="youtube.com/embed"]').forEach(f=>f.contentWindow&&f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'*'));
+  spCtl.forEach((c,t)=>{if(!t.isConnected){spCtl.delete(t);return}try{c.pause()}catch(e){}});
+  $$('audio').forEach(a=>a.pause());$$('.track.live').forEach(t=>t.classList.remove('live'))}
+function play(key,tr,keep){playRaw(key,tr);const m=media[key]||{};if(+m.dur>0&&!keep){playTimer=setTimeout(stopAll,m.dur*1000)}}
+function compare(box){const tk=box.querySelectorAll('.track');if(tk.length<2)return;const a=tk[0],b=tk[1];
+  const da=(+(media[a.dataset.key]||{}).dur||20)*1000,db=(+(media[b.dataset.key]||{}).dur||20)*1000;
+  play(a.dataset.key,a,true);toast('A suena '+da/1000+' s, luego B');
+  playTimer=setTimeout(()=>{play(b.dataset.key,b,true);playTimer=setTimeout(stopAll,db)},da)}
+function markStart(tr){const au=tr.querySelector('audio');const pos=au?au.currentTime:tr._pos;
+  if(pos==null||isNaN(pos)){toast('Reproduzca la canción (Spotify o archivo local) y pulse «Marcar» en el punto deseado');return}
+  const s=Math.max(0,Math.floor(pos));tr.querySelector('[data-start]').value=s;tr.querySelector('[data-save]').click();toast('Inicio marcado en '+fmt(s))}
+function playRaw(key,tr){stopAll();const m=media[key]||{};tr=tr||$(`.track[data-key="${key}"]`);
+  const au=tr.querySelector('audio');
+  if(au){tr.classList.add('live');au.currentTime=+m.start||0;au.play().catch(()=>toast('Pulse ▶ en el reproductor'));return}
+  const p=pick(m);
+  if(!p){tr.querySelector('.cfg').classList.add('on');toast('Pegue primero el enlace o cargue un archivo');return}
+  tr.classList.add('live');
+  if(p.kind==='yt'){ytCmd(tr,'seekTo',[+m.start||0,true]);ytCmd(tr,'playVideo')}
+  else{const c=spCtl.get(tr);if(c){c.play();if(+m.start)setTimeout(()=>{try{c.seek(+m.start)}catch(e){}},700)}else toast('Pulse ▶ dentro del reproductor de Spotify')}}
+function refreshTracks(key){$$(`.track[data-key="${key}"]`).forEach(t=>{const pid=key.slice(0,-1),l=key.slice(-1);const p=PAIRS.find(x=>x.id==pid);t.querySelector('.pl').innerHTML=playerHTML(key,p[l]);mountSpotify(t)})}
+
+/* ---------- interactions ---------- */
+document.addEventListener('click',e=>{
+  const T=e.target;
+  let b;
+  if(b=T.closest('[data-compare]')){let c=b.parentElement;while(c&&!c.querySelector('.ab'))c=c.parentElement;if(c)compare(c);return}
+  if(b=T.closest('[data-mark]')){markStart(b.closest('.track'));return}
+  if(b=T.closest('[data-live-trib]')){const box=b.closest('.frame').querySelector('.pairbox');if(b.classList.contains('on'))liveToggle(false);else liveTrib(box);return}
+  if(b=T.closest('[data-live-poll]')){if(b.classList.contains('on'))liveToggle(false);else livePollOpen(b);return}
+  if(b=T.closest('[data-join]')){showJoin();return}
+  if(b=T.closest('[data-join-close]')){$('#join').classList.remove('on');return}
+  if(b=T.closest('[data-live-toggle]')){liveToggle(!LIVE.open);return}
+  if(b=T.closest('[data-live-clear]')){if(confirm('¿Borrar TODOS los votos de estudiantes y los conteos locales?')){api('/api/admin/borrar',{key:'*'}).then(applyLive);votes={};store.set('votes',votes);$$('.vote input').forEach(i=>i.value='');$$('.vote').forEach(sumVote);renderResults()}return}
+  if(b=T.closest('.cls button')){b.classList.toggle('on');b.setAttribute('aria-pressed',b.classList.contains('on'));return}
+  if(b=T.closest('.layers button')){b.classList.toggle('on');b.setAttribute('aria-pressed',b.classList.contains('on'));return}
+  if(b=T.closest('.poll .pill')){b.parentNode.querySelectorAll('.pill').forEach(p=>p.classList.remove('pick'));b.classList.add('pick');return}
+  if(b=T.closest('[data-reveal]')){const f=b.closest('.frame');const p=f.querySelector('.poll');p.querySelector(`[data-o="${p.dataset.ans}"]`).classList.add('right');f.querySelector('.reveal').classList.add('on');return}
+  if(b=T.closest('button.dot')){const n=(+b.dataset.s+1)%4;b.dataset.s=n;b.textContent=n===2?'✕':'';return}
+  if(b=T.closest('[data-clear]')){b.closest('.frame').querySelectorAll('button.dot').forEach(x=>{x.dataset.s=0;x.textContent=''});return}
+  if(b=T.closest('[data-timer]')){timer(b);return}
+  if(b=T.closest('[data-pair]')){const box=b.closest('.frame').querySelector('.pairbox');stopAll();renderPair(box,+b.dataset.pair);liveRefresh(box);b.parentNode.querySelectorAll('.pill').forEach(x=>x.classList.toggle('sel',x===b));return}
+  if(b=T.closest('[data-play]')){play(b.dataset.play,b.closest('.track'));return}
+  if(b=T.closest('[data-stop]')){stopAll();return}
+  if(b=T.closest('[data-cfg]')){b.closest('.track').querySelector('.cfg').classList.toggle('on');return}
+  if(b=T.closest('[data-save]')){const k=b.dataset.save;const tr=b.closest('.track');const src=tr.querySelector('[data-src]').value.trim();const st=+tr.querySelector('[data-start]').value||0;
+    if(src&&!parseLink(src)){toast('No reconozco ese enlace: use YouTube o Spotify');return}
+    media[k]=Object.assign({},media[k],{src,start:st,dur:+tr.querySelector('[data-dur]').value||0});delete localAudio[k];store.set('media',media);refreshTracks(k);$$(`.track[data-key="${k}"] [data-src]`).forEach(i=>i.value=src);$$(`.track[data-key="${k}"] [data-start]`).forEach(i=>i.value=st||'');tr.querySelector('.cfg').classList.remove('on');toast(src?'Enlace guardado en este navegador':'Enlace borrado');return}
+  if(b=T.closest('[data-refresh]')){renderResults();toast('Resultados actualizados');return}
+  if(b=T.closest('[data-resetvotes]')){if(confirm('¿Borrar las dos votaciones?')){votes={};store.set('votes',votes);$$('.vote input').forEach(i=>i.value='');$$('.vote').forEach(sumVote);renderResults()}return}
+});
+document.addEventListener('change',e=>{const f=e.target.closest&&e.target.closest('[data-file]');if(f&&f.files[0]){const k=f.dataset.file;localAudio[k]=URL.createObjectURL(f.files[0]);stopAll();refreshTracks(k);toast('Archivo local cargado (solo en esta sesión)')}});
+document.addEventListener('input',e=>{if(e.target.closest('.vote'))sumVote(e.target.closest('.vote'))});
+document.addEventListener('change',e=>{if(e.target.matches('.test input')){const f=e.target.closest('.frame');const n=f.querySelectorAll('.test input:checked').length;f.querySelector('[data-status]').textContent=n===7?'Las 7 respondidas: ya tiene un caso.':`${n} de 7 respondidas.${n?' Todavía es una intuición.':''}`}});
+$('#cfgAll').onclick=()=>{location.hash='#tribunal';setTimeout(()=>{const fr=$('#tribunal').nextElementSibling.nextElementSibling;fr.scrollIntoView({behavior:'smooth'});fr.querySelectorAll('.cfg').forEach(c=>c.classList.add('on'))},300)};
+function timer(b){if(b._iv){clearInterval(b._iv);b._iv=null;b.textContent='Reanudar '+fmt(b._left);return}
+  if(b._left==null||b._left<=0)b._left=+b.dataset.timer;
+  const tick=()=>{b.textContent=(b._left>0?'Pausar ':'Tiempo · ')+fmt(Math.max(0,b._left));if(b._left<=0){clearInterval(b._iv);b._iv=null;b._left=null;toast('Se acabó el tiempo');return}b._left--};tick();b._iv=setInterval(tick,1000)}
+
+/* ---------- votación en vivo de estudiantes (servidor.py) ---------- */
+const LIVE={on:false,urls:[],online:0,active:null,open:false};
+let TK='';try{const u=new URL(location.href);const k=u.searchParams.get('k');if(k){localStorage.setItem('remix:tk',k);u.searchParams.delete('k');history.replaceState(null,'',u.pathname+u.search+u.hash)}TK=localStorage.getItem('remix:tk')||''}catch(e){}
+async function api(path,body){const h={'X-Teacher-Key':TK};if(body)h['Content-Type']='application/json';const r=await fetch(path,body?{method:'POST',headers:h,body:JSON.stringify(body)}:{cache:'no-store',headers:h});return r.json()}
+async function activate(key,title,subtitle,options){try{const s=await api('/api/admin/activar',{key,title,subtitle,options});applyLive(s);toast('Votación abierta para estudiantes')}catch(e){toast('No se pudo abrir la votación')}}
+async function liveToggle(open){try{applyLive(await api(open?'/api/admin/abrir':'/api/admin/cerrar',{}));toast(open?'Votación reabierta':'Votación cerrada')}catch(e){}}
+function liveTrib(box){const r=+box.dataset.round,pid=+box.dataset.pid;const p=PAIRS.find(x=>x.id===pid);
+  activate(`r${r}p${pid}`,`Par ${pid} · ${r===1?'primera':'segunda'} votación`,`A: ${p.a.t} — B: ${p.b.t}. ¿Se copiaron?`,['Copia','No copia','Se parece, pero no sé'])}
+function liveRefresh(box){const f=box.closest('.frame');const b=f&&f.querySelector('[data-live-trib]');if(b&&b.classList.contains('on'))liveTrib(box)}
+function livePollOpen(b){const i=+b.dataset.livePoll,s=SLIDES[i];activate('poll'+i,s.title.replace(/"/g,''),s.lead||'',s.options)}
+function applyLive(s){if(!s||s.ok===false)return;LIVE.active=s.active;LIVE.open=s.open;if(s.online!=null)LIVE.online=s.online;
+  const res=s.results||{};
+  Object.keys(res).forEach(k=>{const c=res[k],tot=c.reduce((a,b)=>a+b,0);if(!tot)return;
+    if(/^r\dp\d$/.test(k)){const arr=[c[0],c[1],c[2]].map(String);votes[k]=arr;$$(`.vote[data-vote="${k}"]`).forEach(v=>{v.querySelectorAll('input').forEach((inp,j)=>{inp.value=arr[j]});sumVote(v)})}
+    else if(k.startsWith('poll')){const f=$(`.frame[data-i="${k.slice(4)}"]`);if(f)f.querySelectorAll('.poll .pill').forEach((pl,j)=>{const e=pl.querySelector('.cnt');if(e)e.textContent=c[j]?' · '+c[j]:''})}});
+  const ak=LIVE.active&&LIVE.open?LIVE.active.key:null;
+  $$('[data-live-trib]').forEach(b=>{const bx=b.closest('.frame').querySelector('.pairbox');const on=ak===`r${bx.dataset.round}p${bx.dataset.pid}`;b.classList.toggle('on',on);b.textContent=on?'Votación abierta · cerrar':'Abrir votación a estudiantes'});
+  $$('[data-live-poll]').forEach(b=>{const on=ak==='poll'+b.dataset.livePoll;b.classList.toggle('on',on);b.textContent=on?'Votación abierta · cerrar':'Abrir a estudiantes'});
+  const cur=LIVE.active&&res[LIVE.active.key]?res[LIVE.active.key].reduce((x,y)=>x+y,0):0;
+  $$('.livecount').forEach(e=>{e.textContent=LIVE.on?`${LIVE.online} conectados`+(LIVE.open?` · ${cur} votos`:''):''});
+  renderJoin()}
+function renderJoin(){const j=$('#join');if(!j||!j.classList.contains('on'))return;$('#joinStat').textContent=`${LIVE.online} conectados · ${LIVE.open?'votación abierta':'votación cerrada'}${LIVE.active?' · '+LIVE.active.title:''}`}
+function showJoin(){const url=LIVE.urls[0]||'';$('#join').classList.add('on');$('#joinUrl').textContent=url||'(no se detectó la red: revise el Wi-Fi)';$('#joinOther').textContent=LIVE.urls.slice(1).join('   ·   ');
+  try{const q=qrcode(0,'M');q.addData(url);q.make();$('#joinQr').innerHTML=q.createImgTag(6,2)}catch(e){$('#joinQr').textContent=''}renderJoin()}
+async function pollLive(){try{applyLive(await api('/api/estado'))}catch(e){}}
+(async()=>{try{const i=await api('/api/info');LIVE.on=!!i.teacher;LIVE.urls=i.urls||[];
+  if(LIVE.on){document.body.classList.add('live-on');pollLive();setInterval(pollLive,2000)}}catch(e){}})();
+
+/* ---------- nav ---------- */
+const burger=$('#burger'),ov=$('#overlay');const setMenu=on=>{burger.classList.toggle('on',on);ov.classList.toggle('on',on);burger.setAttribute('aria-expanded',on)};
+burger.onclick=()=>setMenu(!ov.classList.contains('on'));ov.addEventListener('click',e=>{if(e.target.closest('a,button'))setMenu(false)});
+
+/* ---------- hero ---------- */
+function useTypewriter(text,el,speed=38,startDelay=600){let i=0;const caret='<span class="caret"></span>';el.innerHTML=caret;if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent=text;return}
+  setTimeout(()=>{const iv=setInterval(()=>{i++;el.innerHTML=text.slice(0,i)+(i<text.length?caret:'');if(i>=text.length)clearInterval(iv)},speed)},startDelay)}
+useTypewriter('¿Quién tiene que pedir permiso para que una canción suene? Antes de responder, hay que separarla en pistas. Empecemos.',$('#type'));
+setTimeout(()=>$('#pills').classList.add('on'),400);
+
+/* ---------- covers: Onda (A) and Consola (B) ---------- */
+const cv=$('#bg'),cx=cv.getContext('2d');let W,H,DPR,cover='A',t=0,target=.15,prevX=null;const SENS=.8;
+const rnd=(s=>()=>{s=(s*16807)%2147483647;return s/2147483647})(42);
+const WAVE=Array.from({length:900},(_,i)=>{const u=i/900;const env=Math.sin(u*Math.PI)**.6*(0.55+0.45*Math.sin(u*31+1.3))*(0.7+0.3*Math.sin(u*7.1));return Math.min(1,Math.abs(env*(0.5+rnd()*.5)))});
+function size(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0);draw()}
+function drawA(){cx.fillStyle='#000';cx.fillRect(0,0,W,H);const x0=W>768?W*.38:W*.06,x1=W-W*.06,y=W>768?H*.5:H*.3,amp=W>768?H*.3:H*.16;const n=WAVE.length;const bw=(x1-x0)/n;const head=Math.floor(t*n);
+  for(let i=0;i<n;i++){const h=WAVE[i]*amp;const x=x0+i*bw;const a=i<=head?.95:.22;cx.fillStyle=`rgba(255,255,255,${a})`;cx.fillRect(x,y-h,Math.max(1,bw*.6),h*2)}
+  const hx=x0+head*bw;cx.fillStyle='#fff';cx.fillRect(hx,y-amp-24,1.5,amp*2+48);cx.beginPath();cx.arc(hx+.75,y-amp-30,4,0,7);cx.fill();
+  cx.fillStyle='rgba(255,255,255,.5)';cx.font='13px Inter, sans-serif';cx.textAlign='left';cx.fillText(fmt(Math.floor(t*212)),x0,y+amp+44);cx.textAlign='right';cx.fillText('3:32',x1,y+amp+44)}
+function drawB(){cx.fillStyle='#000';cx.fillRect(0,0,W,H);const n=8;const x0=W>768?W*.42:W*.08,x1=W-W*.08;const gap=(x1-x0)/n;const top=W>768?H*.2:H*.08,bot=W>768?H*.78:H*.5;
+  for(let i=0;i<n;i++){const cxp=x0+gap*(i+.5);const ph=Math.sin(t*Math.PI*2*(0.5+i*.17)+i)*.5+.5;const yk=bot-(bot-top)*(0.15+0.7*ph);
+    cx.strokeStyle='rgba(255,255,255,.18)';cx.lineWidth=1;cx.beginPath();cx.moveTo(cxp,top);cx.lineTo(cxp,bot);cx.stroke();
+    for(let k=0;k<=10;k++){const y=top+(bot-top)*k/10;cx.fillStyle='rgba(255,255,255,.35)';cx.fillRect(cxp-10,y,20,1)}
+    cx.fillStyle='#fff';cx.fillRect(cxp-14,yk-9,28,18);cx.fillStyle='#000';cx.fillRect(cxp-14,yk-.5,28,1);
+    cx.fillStyle='rgba(255,255,255,.55)';cx.font='12px Inter, sans-serif';cx.textAlign='center';cx.fillText(['OBRA','LETRA','VOZ','MASTER','IMAGEN','SAMPLE','BEAT','MEZCLA'][i],cxp,bot+26);
+    const lv=Math.round(ph*7);for(let k=0;k<8;k++){cx.fillStyle=k<lv?'#fff':'rgba(255,255,255,.12)';cx.fillRect(cxp-3,top-24-k*7,6,4)}}}
+function draw(){if(!W)return;cover==='A'?drawA():drawB()}
+function loop(){const d=target-t;if(Math.abs(d)>.0005){t+=d*.12;draw()}requestAnimationFrame(loop)}
+function scrub(x){if(prevX===null){prevX=x;return}const delta=x-prevX;prevX=x;target=Math.min(1,Math.max(0,target+(delta/W)*SENS))}
+addEventListener('mousemove',e=>{if(!document.body.classList.contains('scrolled'))scrub(e.clientX)});
+addEventListener('touchstart',e=>{prevX=e.touches[0].clientX},{passive:true});
+addEventListener('touchmove',e=>{if(scrollY<innerHeight*.5)scrub(e.touches[0].clientX)},{passive:true});
+$$('[data-cover]').forEach(b=>b.onclick=()=>{cover=b.dataset.cover;$$('[data-cover]').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()});
+addEventListener('resize',size);size();loop();
+(function(){if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;const dot=$('#dot');let mx=-100,my=-100,dx=-100,dy=-100;
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;dot.classList.add('on');dot.classList.toggle('wide',!!(e.target.closest&&e.target.closest('a,button,.pill,.cls button,.layers button,.dot,label')))},{passive:true});
+  (function tick(){dx+=(mx-dx)*.2;dy+=(my-dy)*.2;dot.style.transform='translate3d('+dx+'px,'+dy+'px,0)';requestAnimationFrame(tick)})()})();
+addEventListener('scroll',()=>document.body.classList.toggle('scrolled',scrollY>innerHeight*.9),{passive:true});
+
+/* chapter backgrounds: generative waveform rings */
+$$('.chapbg').forEach(c=>{const seed=+c.dataset.seed;const g=c.getContext('2d');const R=()=>{const w=c.clientWidth,h=c.clientHeight;c.width=w*2;c.height=h*2;g.setTransform(2,0,0,2,0,0);g.fillStyle='#000';g.fillRect(0,0,w,h);
+  const cxp=w*.72,cyp=h*.45;for(let r=40;r<Math.max(w,h);r+=22){g.beginPath();for(let a=0;a<=Math.PI*2+.01;a+=.02){const rr=r+Math.sin(a*(3+seed%5)+r*.05)*6+Math.sin(a*11+seed)*3;const x=cxp+Math.cos(a)*rr,y=cyp+Math.sin(a)*rr;a?g.lineTo(x,y):g.moveTo(x,y)}g.strokeStyle=`rgba(255,255,255,${Math.max(.03,.22-r/Math.max(w,h)*.25)})`;g.lineWidth=1;g.stroke()}};R();new ResizeObserver(R).observe(c)});
+
+/* ---------- class mode ---------- */
+const frames=$$('.frame');let cur=0;
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>=.5){cur=+e.target.dataset.i;upd()}})},{threshold:[.5]});
+frames.forEach(f=>io.observe(f));
+function upd(){$('#count').textContent=`${cur+1} / ${N}`;const s=SLIDES[cur];$('#notesH').textContent=`Notas del docente · ${cur+1}`;$('#notesB').innerHTML=para(s.notes||'Sin notas.')}
+function go(i){stopAll();cur=Math.max(0,Math.min(N-1,i));frames[cur].scrollIntoView({behavior:'smooth'});upd()}
+function setCm(on){document.body.classList.toggle('cm',on);setMenu(false);if(on){if(scrollY<innerHeight*.5)go(0);toast('Modo clase: ← → para avanzar, N para notas')}else{$('#notes').classList.remove('on');if(document.fullscreenElement)document.exitFullscreen()}}
+$$('[data-cm]').forEach(b=>b.onclick=()=>setCm(!document.body.classList.contains('cm')));
+if(location.hash==='#clase')setTimeout(()=>setCm(true),400);
+$('#exitCm').onclick=()=>setCm(false);$('#notesBtn').onclick=()=>$('#notes').classList.toggle('on');
+addEventListener('keydown',e=>{if(!document.body.classList.contains('cm')||e.target.matches('input,textarea'))return;const k=e.key;
+  if(['ArrowRight','ArrowDown','PageDown',' '].includes(k)){e.preventDefault();go(cur+1)}
+  else if(['ArrowLeft','ArrowUp','PageUp'].includes(k)){e.preventDefault();go(cur-1)}
+  else if(k==='n'||k==='N')$('#notes').classList.toggle('on');
+  else if(k==='f'||k==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen().catch(()=>{})}
+  else if(k==='Escape')setCm(false);else if(k==='Home')go(0);else if(k==='End')go(N-1)});
+})();
+
+</script>
+</body></html>

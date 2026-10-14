@@ -1,0 +1,59 @@
+LA SALA DE REMEZCLAS - cómo operar la clase
+============================================
+ARCHIVOS
+  index.html   Portal (esfera de 21 piezas de la clase)
+  clase.html   Presentación de la clase (mismo diseño: Playfair + Inter, menú, cursor)
+  fonts/       Tipografías locales (no requieren internet)
+  votar.html   Página que ven los estudiantes en el celular
+  servidor.py  Servidor de la clase (web + votos)
+  vendor/      Generador de QR local
+  iniciar-clase.bat
+
+VOTACIÓN DE ESTUDIANTES (servidor.py, solo Python; sin instalar nada)
+  1. Doble clic en iniciar-clase.bat. Aparece la dirección para estudiantes (http://IP:8777/votar.html).
+     La primera vez Windows pregunta por el Firewall: permita Python en "Redes privadas".
+  2. Docente y estudiantes deben estar en la MISMA red Wi-Fi (algunas redes de universidad aíslan
+     a los dispositivos: en ese caso use el punto de acceso del celular del docente).
+  3. En la clase: Menú > "Conectar estudiantes" muestra el QR y la dirección.
+  4. En el tribunal pulse "Abrir votación a estudiantes": los celulares muestran el par y 3 botones.
+     Los conteos llegan solos a las casillas y a la diapositiva de resultados. Al cambiar de par,
+     la votación se reasigna sola. Las encuestas (diapositivas 6, 16 y 25) tienen su botón.
+  5. Cada celular vota una vez por pregunta y puede cambiar su voto mientras esté abierta.
+  6. Los votos se guardan en datos/votos.json. Los controles del docente solo funcionan desde
+     localhost; los celulares solo pueden votar.
+
+CANCIONES Y FRAGMENTOS
+  - "Comparar A → B" reproduce A y luego B (20 s cada una, o la duración configurada).
+  - Para que cada canción arranque donde se ve lo parecido: reproduzca, pause en el punto,
+    pulse "Enlace" > "Marcar inicio aquí" (funciona con Spotify y con archivo local).
+  - Cada par muestra "qué escuchar" y su expediente del caso (en la 2.ª votación va plegado,
+    para no revelar resultados en la 1.ª).
+
+ANTES DE LA CLASE
+1. Doble clic en iniciar-clase.bat  -> abre http://localhost:8777/ (use siempre esa dirección:
+   votos y enlaces quedan guardados por dirección). No abra los HTML con doble clic.
+2. Pulse "Menú" > "Modo clase". Flechas para avanzar, N notas, F pantalla completa.
+3. Entre al tribunal, pase por los 5 pares y pulse "Reproducir" en cada canción.
+   Inicie sesión en Spotify en ese navegador si quiere la canción completa (sin sesión suenan 30 s,
+   que alcanza para la regla de los 20 segundos).
+4. Necesita internet (Spotify/YouTube). Sin red: botón "Enlace" > "Archivo local" y cargue un MP3.
+
+POR QUÉ SPOTIFY Y NO YOUTUBE
+  YouTube devuelve "error 150" (el titular prohíbe la incrustación) en casi todos los videos de
+  disqueras y canales VEVO/Topic. Spotify sí permite incrustar. YouTube queda como respaldo y
+  siempre hay un enlace "Abrir fuente" por si la incrustación falla.
+
+CANCIONES PRECARGADAS (Spotify; entre paréntesis el respaldo en YouTube)
+  1A Marvin Gaye - Got to Give It Up (Pt. 1)   1QxE16oMgi19TWvy1YrK7B  (qhFNY9zW2F4)
+  1B Robin Thicke - Blurred Lines              0XzkemXSiXJa7VgDFPfU4S  (yyDUC1LUXSU)
+  2A Marvin Gaye - Let's Get It On             39l1UORIhuHvUWfxG53tRZ  (tQj1kPmQXwE)
+  2B Ed Sheeran - Thinking Out Loud            5As8xJv2pK4GES8c5kgtsK  (lp-EO5I60KA)
+  3A Miguel Bosé - Don Diablo                  11olvsaUPHD6owYgWCPOGX  (lce_iJlk0Ig)
+  3B Dua Lipa - Levitating                     41z2bSbbtJ9wiIee4RXdi5  (WHuBW3qKm9g)
+  4A Loca con su tíguere (R. Arias)            SIN fuente oficial: subida de aficionado en YouTube
+                                               umTzxNu0uMY (VERIFICAR de oído) o cargue archivo local
+  4B Shakira - Loca ft. El Cata                42k1KeBehAd83lrGt1okiC  (XAhTt60W7qo)
+  5A Shabba Ranks - Dem Bow                    1BUBidO12VUKo44PaQvpt9  (HkzEZ_pFORs)
+  5B Karol G - Provenza                        7dSZ6zGTQx66c2GF91xCrb  (ca48oMV59LU)
+Todos los IDs de Spotify fueron validados con el oEmbed de Spotify (título correcto).
+Cada botón "Enlace" permite cambiar cualquier canción.
