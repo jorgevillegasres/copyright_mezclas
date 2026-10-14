@@ -15,6 +15,8 @@ TEACHER_KEY = os.environ.get('TEACHER_KEY', '')   # en la nube: clave del docent
 PUBLIC_URL = os.environ.get('RENDER_EXTERNAL_URL', '').rstrip('/')
 ALLOWED_TOP = {'index.html', 'clase.html', 'votar.html'}
 ALLOWED_DIRS = ('fonts/', 'vendor/')
+MAX_CLIENTS_PER_IP = 300      # tope de dispositivos distintos por IP y votación (anti-spam)
+IP_CLIENTS = {}
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(ROOT, 'datos')
 FILE = os.path.join(DATA, 'votos.json')
@@ -85,6 +87,10 @@ class H(SimpleHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-store')
         super().end_headers()
 
+    def real_ip(self):
+        xf = self.headers.get('X-Forwarded-For', '')
+        return (xf.split(',')[0].strip() if xf else self.client_address[0])
+
     def is_teacher(self):
         if TEACHER_KEY:
             return self.headers.get('X-Teacher-Key', '') == TEACHER_KEY
@@ -116,6 +122,9 @@ class H(SimpleHTTPRequestHandler):
             with LOCK:
                 if cid:
                     STATE['seen'][cid] = time.time()
+                    if len(STATE['seen']) > 5000:
+                        cut = time.time() - 60
+                        STATE['seen'] = {k: t for k, t in STATE['seen'].items() if t > cut}
                 s = snapshot()
                 a = s['active']
                 mine = None
@@ -145,6 +154,11 @@ class H(SimpleHTTPRequestHandler):
                     return self.send_json({'ok': False, 'error': 'cerrada'}, 409)
                 if not isinstance(opt, int) or not 0 <= opt < len(a['options']):
                     return self.send_json({'ok': False, 'error': 'opcion'}, 400)
+                ip = self.real_ip()
+                known = IP_CLIENTS.setdefault((ip, key), set())
+                if cid not in known and len(known) >= MAX_CLIENTS_PER_IP:
+                    return self.send_json({'ok': False, 'error': 'limite'}, 429)
+                known.add(cid)
                 STATE['votes'].setdefault(key, {})[cid] = opt
                 save()
             return self.send_json({'ok': True})
@@ -167,8 +181,11 @@ class H(SimpleHTTPRequestHandler):
                 key = b.get('key')
                 if key == '*':
                     STATE['votes'] = {}
+                    IP_CLIENTS.clear()
                 elif key:
                     STATE['votes'].pop(str(key), None)
+                    for k in [k for k in IP_CLIENTS if k[1] == str(key)]:
+                        IP_CLIENTS.pop(k, None)
             save()
             return self.send_json({'ok': True, **snapshot()})
         return self.send_json({'ok': False}, 404)

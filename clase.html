@@ -787,7 +787,7 @@ document.addEventListener('click',e=>{
     if(src&&!parseLink(src)){toast('No reconozco ese enlace: use YouTube o Spotify');return}
     media[k]=Object.assign({},media[k],{src,start:st,dur:+tr.querySelector('[data-dur]').value||0});delete localAudio[k];store.set('media',media);refreshTracks(k);$$(`.track[data-key="${k}"] [data-src]`).forEach(i=>i.value=src);$$(`.track[data-key="${k}"] [data-start]`).forEach(i=>i.value=st||'');tr.querySelector('.cfg').classList.remove('on');toast(src?'Enlace guardado en este navegador':'Enlace borrado');return}
   if(b=T.closest('[data-refresh]')){renderResults();toast('Resultados actualizados');return}
-  if(b=T.closest('[data-resetvotes]')){if(confirm('¿Borrar las dos votaciones?')){votes={};store.set('votes',votes);$$('.vote input').forEach(i=>i.value='');$$('.vote').forEach(sumVote);renderResults()}return}
+  if(b=T.closest('[data-resetvotes]')){if(confirm('¿Borrar las dos votaciones?')){if(LIVE.on)api('/api/admin/borrar',{key:'*'}).then(applyLive).catch(()=>{});votes={};store.set('votes',votes);$$('.vote input').forEach(i=>i.value='');$$('.vote').forEach(sumVote);renderResults()}return}
 });
 document.addEventListener('change',e=>{const f=e.target.closest&&e.target.closest('[data-file]');if(f&&f.files[0]){const k=f.dataset.file;localAudio[k]=URL.createObjectURL(f.files[0]);stopAll();refreshTracks(k);toast('Archivo local cargado (solo en esta sesión)')}});
 document.addEventListener('input',e=>{if(e.target.closest('.vote'))sumVote(e.target.closest('.vote'))});
