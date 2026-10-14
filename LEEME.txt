@@ -7,6 +7,7 @@ ARCHIVOS
   votar.html   Página que ven los estudiantes en el celular
   servidor.py  Servidor de la clase (web + votos)
   vendor/      Generador de QR local
+  GUIA-DEL-DOCENTE.md  Lista de verificación, recorrido y solución de problemas
   iniciar-clase.bat
 
 VOTACIÓN DE ESTUDIANTES (servidor.py, solo Python; sin instalar nada)

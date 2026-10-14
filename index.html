@@ -48,7 +48,7 @@ body.revealed #headline .inner span{opacity:1;transform:none;filter:blur(0);tran
 .card.tall{height:calc(var(--cw) * 1.25);margin-top:calc(var(--cw) * -.625)}
 .card figure{position:absolute;inset:0;margin:0;overflow:hidden;border-radius:3px;background:#0a0a0a;transition:transform .5s ease}
 .card:hover figure{transform:scale(1.045)}
-.card img{width:100%;height:100%;object-fit:cover;opacity:0}
+.card img{width:100%;height:100%;object-fit:cover;opacity:0;filter:brightness(1.4) contrast(1.08)}
 .card img.in{opacity:1}
 body.revealed .card img{transition:opacity .8s ease-out}
 .card figure::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,var(--d,0));box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);border-radius:3px;pointer-events:none}
@@ -99,7 +99,7 @@ body.deep .cue,body.gridview .cue,body.lit .cue{opacity:0!important}
 body.gridview #grid{opacity:1;pointer-events:auto}
 .rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:clamp(10px,1.4vw,20px);max-width:1680px;margin:0 auto}
 #grid figure{position:relative;margin:0;aspect-ratio:3/2;border-radius:3px;background:#0b0b0b;overflow:hidden;cursor:pointer}
-#grid img{width:100%;height:100%;object-fit:cover;opacity:.82;transition:transform .8s,opacity .8s}
+#grid img{width:100%;height:100%;object-fit:cover;opacity:.9;filter:brightness(1.3);transition:transform .8s,opacity .8s}
 #grid figure:hover img{transform:scale(1.05);opacity:1}
 #grid figcaption{position:absolute;left:0;right:0;bottom:0;font-family:var(--serif);font-size:15px;padding:26px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.82));opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
 #grid figure:hover figcaption{opacity:1;transform:none}

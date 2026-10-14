@@ -405,7 +405,7 @@ body.live-on .overlay [data-join]{display:block}
   <button class="pill ghost" data-join-close style="align-self:flex-end">Cerrar</button>
   <p class="kick">Estudiantes · misma red Wi-Fi</p><h3>Entren a esta dirección</h3>
   <div id="joinQr"></div><p id="joinUrl"></p><p id="joinOther"></p><p id="joinStat"></p>
-  <div class="tools"><button class="pill ghost" data-live-toggle>Cerrar / reabrir votación</button><button class="pill ghost" data-live-clear>Borrar todos los votos</button></div>
+  <div class="tools"><button class="pill ghost" data-live-toggle>Cerrar / reabrir votación</button><button class="pill ghost" data-live-export>Descargar resultados (CSV)</button><button class="pill ghost" data-live-clear>Borrar todos los votos</button></div>
 </div></div>
 <div id="dot"></div>
 <section class="hero" id="top">
@@ -705,7 +705,7 @@ function bodyBase(s){
   switch(s.type){
   case 'cards':return `<div class="grid g${s.cols}">${s.items.map(it=>`<div>${it.k?`<span class="sym">${it.k}</span>`:''}<h3>${it.t}</h3><p>${it.d}</p>${it.tag?`<span class="tag">${it.tag}</span>`:''}</div>`).join('')}</div>`;
   case 'versus':return `<div class="vs ${s.vs?'mid':''}"><div><h3>${s.left.h}</h3><p>${s.left.d}</p>${s.left.tag?`<span class="tag">${s.left.tag}</span>`:''}</div>${s.vs?'<div class="vsmark">vs.</div>':''}<div><h3>${s.right.h}</h3><p>${s.right.d}</p>${s.right.tag?`<span class="tag">${s.right.tag}</span>`:''}</div></div>${s.bullets?`<ul class="blist">${s.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:''}`;
-  case 'classify':return `<div class="cls">${s.rows.map(r=>`<button aria-pressed="false"><span>${r[0]}</span><span>${r[1]}</span></button>`).join('')}</div>`;
+  case 'classify':return `<div class="cls">${s.rows.map(r=>`<button aria-pressed="false"><span>${r[0]}</span><span>${r[1]}</span></button>`).join('')}</div><div class="tools live-only"><span style="color:var(--mute);font-size:14px">Votación en vivo:</span>${s.rows.map((r,j)=>`<button class="pill ghost" data-live-cls="${SLIDES.indexOf(s)}:${j}">${j+1}<span class="cnt"></span></button>`).join('')}</div>`;
   case 'poll':return `<div class="poll" data-ans="${s.answer}">${s.options.map((o,j)=>`<button class="pill" data-o="${j}">${o}<span class="cnt"></span></button>`).join('')}</div><div class="tools"><button class="pill ghost" data-reveal>Mostrar respuesta sugerida</button><button class="pill ghost live-only" data-live-poll="${SLIDES.indexOf(s)}">Abrir a estudiantes</button><span class="livecount" style="color:var(--mute);font-size:14px"></span></div><p class="reveal">${s.options[s.answer]}. ${s.key}</p>`;
   case 'timeline':return `<ol class="tl">${s.items.map(it=>`<li><b>${it[0]}</b><p>${it[1]}</p></li>`).join('')}</ol>`;
   case 'case':{const p=PAIRS.find(x=>x.id===s.pair);return `<ol class="tl">${s.items.map(it=>`<li><b>${it[0]}</b><p>${it[1]}</p></li>`).join('')}</ol><div class="playcase">${dossierHTML(p.id)}<p class="kick">Escuchar el par ${p.id}</p>${abHTML(p)}</div>`}
@@ -768,6 +768,8 @@ document.addEventListener('click',e=>{
   if(b=T.closest('[data-mark]')){markStart(b.closest('.track'));return}
   if(b=T.closest('[data-live-trib]')){const box=b.closest('.frame').querySelector('.pairbox');if(b.classList.contains('on'))liveToggle(false);else liveTrib(box);return}
   if(b=T.closest('[data-live-poll]')){if(b.classList.contains('on'))liveToggle(false);else livePollOpen(b);return}
+  if(b=T.closest('[data-live-cls]')){const [si,rj]=b.dataset.liveCls.split(':').map(Number);if(b.classList.contains('on'))liveToggle(false);else{const row=SLIDES[si].rows[rj];activate(`cls${si}_${rj}`,row[0].replace(/"/g,''),'¿Idea, expresión, fonograma o estilo?',['Idea','Expresión','Fonograma','Estilo'])}return}
+  if(b=T.closest('[data-live-export]')){exportCsv();return}
   if(b=T.closest('[data-join]')){showJoin();return}
   if(b=T.closest('[data-join-close]')){$('#join').classList.remove('on');return}
   if(b=T.closest('[data-live-toggle]')){liveToggle(!LIVE.open);return}
@@ -811,16 +813,19 @@ function applyLive(s){if(!s||s.ok===false)return;LIVE.active=s.active;LIVE.open=
   const res=s.results||{};
   Object.keys(res).forEach(k=>{const c=res[k],tot=c.reduce((a,b)=>a+b,0);if(!tot)return;
     if(/^r\dp\d$/.test(k)){const arr=[c[0],c[1],c[2]].map(String);votes[k]=arr;$$(`.vote[data-vote="${k}"]`).forEach(v=>{v.querySelectorAll('input').forEach((inp,j)=>{inp.value=arr[j]});sumVote(v)})}
+    else if(k.startsWith('cls')){const bt=$(`[data-live-cls="${k.slice(3).replace('_',':')}"] .cnt`);if(bt)bt.textContent=' · '+c.reduce((x,y)=>x+y,0)}
     else if(k.startsWith('poll')){const f=$(`.frame[data-i="${k.slice(4)}"]`);if(f)f.querySelectorAll('.poll .pill').forEach((pl,j)=>{const e=pl.querySelector('.cnt');if(e)e.textContent=c[j]?' · '+c[j]:''})}});
   const ak=LIVE.active&&LIVE.open?LIVE.active.key:null;
   $$('[data-live-trib]').forEach(b=>{const bx=b.closest('.frame').querySelector('.pairbox');const on=ak===`r${bx.dataset.round}p${bx.dataset.pid}`;b.classList.toggle('on',on);b.textContent=on?'Votación abierta · cerrar':'Abrir votación a estudiantes'});
   $$('[data-live-poll]').forEach(b=>{const on=ak==='poll'+b.dataset.livePoll;b.classList.toggle('on',on);b.textContent=on?'Votación abierta · cerrar':'Abrir a estudiantes'});
+  $$('[data-live-cls]').forEach(b=>{b.classList.toggle('on',ak==='cls'+b.dataset.liveCls.replace(':','_'))});
   const cur=LIVE.active&&res[LIVE.active.key]?res[LIVE.active.key].reduce((x,y)=>x+y,0):0;
   $$('.livecount').forEach(e=>{e.textContent=LIVE.on?`${LIVE.online} conectados`+(LIVE.open?` · ${cur} votos`:''):''});
   renderJoin()}
 function renderJoin(){const j=$('#join');if(!j||!j.classList.contains('on'))return;$('#joinStat').textContent=`${LIVE.online} conectados · ${LIVE.open?'votación abierta':'votación cerrada'}${LIVE.active?' · '+LIVE.active.title:''}`}
 function showJoin(){const url=LIVE.urls[0]||'';$('#join').classList.add('on');$('#joinUrl').textContent=url||'(no se detectó la red: revise el Wi-Fi)';$('#joinOther').textContent=LIVE.urls.slice(1).join('   ·   ');
   try{const q=qrcode(0,'M');q.addData(url);q.make();$('#joinQr').innerHTML=q.createImgTag(6,2)}catch(e){$('#joinQr').textContent=''}renderJoin()}
+async function exportCsv(){try{const r=await fetch('/api/admin/exportar',{headers:{'X-Teacher-Key':TK}});if(!r.ok)throw 0;const bl=await r.blob();const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='votos-sala-de-remezclas.csv';document.body.appendChild(a);a.click();a.remove();toast('Resultados descargados')}catch(e){toast('No se pudo exportar')}}
 async function pollLive(){try{applyLive(await api('/api/estado'))}catch(e){}}
 (async()=>{try{const i=await api('/api/info');LIVE.on=!!i.teacher;LIVE.urls=i.urls||[];
   if(LIVE.on){document.body.classList.add('live-on');pollLive();setInterval(pollLive,2000)}}catch(e){}})();

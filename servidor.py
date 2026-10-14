@@ -23,7 +23,7 @@ FILE = os.path.join(DATA, 'votos.json')
 LOCK = threading.Lock()
 os.makedirs(DATA, exist_ok=True)
 
-STATE = {'votes': {}, 'active': None, 'open': False, 'seen': {}}  # votes[key][client] = option index
+STATE = {'votes': {}, 'active': None, 'open': False, 'seen': {}, 'labels': {}}  # votes[key][client] = option index
 if os.path.exists(FILE):
     try:
         STATE.update(json.load(open(FILE, encoding='utf-8')))
@@ -35,7 +35,7 @@ if os.path.exists(FILE):
 def save():
     tmp = FILE + '.tmp'
     with open(tmp, 'w', encoding='utf-8') as f:
-        json.dump({'votes': STATE['votes'], 'active': STATE['active'], 'open': STATE['open']}, f, ensure_ascii=False)
+        json.dump({'votes': STATE['votes'], 'active': STATE['active'], 'open': STATE['open'], 'labels': STATE['labels']}, f, ensure_ascii=False)
     os.replace(tmp, FILE)
 
 
@@ -132,6 +132,28 @@ class H(SimpleHTTPRequestHandler):
                     mine = STATE['votes'].get(a['key'], {}).get(cid)
                 return self.send_json({'active': a, 'open': s['open'], 'mine': mine,
                                        'online': s['online'], 'results': s['results'] if self.is_teacher() else None})
+        if p == '/api/admin/exportar':
+            if not self.is_teacher():
+                return self.send_json({'ok': False, 'error': 'solo el docente'}, 403)
+            import csv, io
+            buf = io.StringIO()
+            w = csv.writer(buf)
+            w.writerow(['clave', 'pregunta', 'opcion', 'votos'])
+            with LOCK:
+                for k in sorted(STATE['votes']):
+                    lab = STATE['labels'].get(k, {})
+                    opts = lab.get('options') or (['Copia', 'No copia', 'Se parece, pero no sé'] if k.startswith('r') else [])
+                    c = counts(k, max(len(opts), 1))
+                    for i, n in enumerate(c):
+                        w.writerow([k, lab.get('title', ''), opts[i] if i < len(opts) else 'opcion %d' % (i + 1), n])
+            b = ('\ufeff' + buf.getvalue()).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/csv; charset=utf-8')
+            self.send_header('Content-Disposition', 'attachment; filename="votos-sala-de-remezclas.csv"')
+            self.send_header('Content-Length', str(len(b)))
+            self.end_headers()
+            self.wfile.write(b)
+            return
         if p == '/api/info':
             urls = [PUBLIC_URL + '/votar.html'] if PUBLIC_URL else lan_urls()
             return self.send_json({'urls': urls, 'teacher': self.is_teacher(), 'port': PORT})
@@ -173,6 +195,7 @@ class H(SimpleHTTPRequestHandler):
                 STATE['active'] = {'key': key, 'title': str(b.get('title') or '')[:200],
                                    'subtitle': str(b.get('subtitle') or '')[:300], 'options': opts}
                 STATE['open'] = True
+                STATE['labels'][key] = {'title': STATE['active']['title'], 'options': opts}
             elif p == '/api/admin/cerrar':
                 STATE['open'] = False
             elif p == '/api/admin/abrir':
