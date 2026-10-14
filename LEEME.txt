@@ -57,3 +57,16 @@ CANCIONES PRECARGADAS (Spotify; entre paréntesis el respaldo en YouTube)
   5B Karol G - Provenza                        7dSZ6zGTQx66c2GF91xCrb  (ca48oMV59LU)
 Todos los IDs de Spotify fueron validados con el oEmbed de Spotify (título correcto).
 Cada botón "Enlace" permite cambiar cualquier canción.
+
+DESPLIEGUE EN RENDER (opcional: votar sin depender del Wi-Fi del salón)
+  1. Suba esta carpeta a un repositorio de GitHub (ya es un repo git local con render.yaml).
+  2. En Render: New > Blueprint > elija el repositorio. Crea el servicio "sala-de-remezclas"
+     (plan free, sin dependencias) y genera la variable TEACHER_KEY.
+  3. Copie TEACHER_KEY desde Render > Environment. Docente: abra
+        https://SU-SERVICIO.onrender.com/clase.html?k=SU_TEACHER_KEY
+     (la clave queda guardada en ese navegador; sin ella nadie puede abrir ni cerrar votaciones).
+  4. Estudiantes: https://SU-SERVICIO.onrender.com/votar.html (el QR de "Conectar estudiantes"
+     ya usa esa dirección).
+  Notas: el plan free se duerme tras 15 min sin uso (el primer acceso tarda ~1 min: ábralo antes de
+  la clase) y los votos viven en memoria: se pierden si el servicio se reinicia o se duerme.
+  Anote o capture los resultados al terminar cada ronda.
