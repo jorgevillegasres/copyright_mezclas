@@ -34,7 +34,7 @@ ANTES DE LA CLASE
 1. Doble clic en iniciar-clase.bat  -> abre http://localhost:8777/ (use siempre esa dirección:
    votos y enlaces quedan guardados por dirección). No abra los HTML con doble clic.
 2. Pulse "Menú" > "Modo clase". Flechas para avanzar, N notas, F pantalla completa.
-3. Entre al tribunal, pase por los 5 pares y pulse "Reproducir" en cada canción.
+3. Entre al tribunal, pase por los 4 pares y pulse "Reproducir" en cada canción.
    Inicie sesión en Spotify en ese navegador si quiere la canción completa (sin sesión suenan 30 s,
    que alcanza para la regla de los 20 segundos).
 4. Necesita internet (Spotify/YouTube). Sin red: botón "Enlace" > "Archivo local" y cargue un MP3.
